@@ -55,9 +55,7 @@ export default function SuggestedUsers() {
               </div>
             </Link>
 
-            <Button size="sm" variant="outline">
-              Follow
-            </Button>
+            <FollowButton userId={suggestedUser._id} />
           </div>
         ))}
       </div>
