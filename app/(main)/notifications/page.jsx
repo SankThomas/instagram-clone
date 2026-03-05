@@ -88,6 +88,7 @@ export default function NotificationsPage() {
             key={notification._id}
             notification={notification}
             onMarkAsRead={markAsRead}
+            onDelete={deleteNotification}
           />
         ))}
       </div>

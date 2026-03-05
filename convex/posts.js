@@ -279,14 +279,26 @@ export const getPostsByHashtag = query({
         .first();
     }
 
-    const posts = await ctx.db
+    const allPosts = await ctx.db
       .query("posts")
-      .withIndex("by_hashtags", (q) => q.eq("hashtags", args.hashtag))
+      .withIndex("by_createdAt")
       .order("desc")
-      .paginate(args.paginationOpts);
+      .collect();
+
+    // Filter posts that contain the hashtag
+    const filteredPosts = allPosts.filter(post => 
+      post.hashtags && post.hashtags.includes(args.hashtag)
+    );
+
+    // Paginate the filtered results
+    const startIndex = args.paginationOpts.cursor
+      ? parseInt(args.paginationOpts.cursor)
+      : 0;
+    const endIndex = startIndex + args.paginationOpts.numItems;
+    const paginatedPosts = filteredPosts.slice(startIndex, endIndex);
 
     const postsWithUserData = await Promise.all(
-      posts.page.map(async (post) => {
+      paginatedPosts.map(async (post) => {
         const user = await ctx.db.get(post.userId);
         const isLiked = currentUser
           ? (await ctx.db
@@ -317,8 +329,10 @@ export const getPostsByHashtag = query({
     );
 
     return {
-      ...posts,
       page: postsWithUserData,
+      isDone: endIndex >= filteredPosts.length,
+      continueCursor:
+        endIndex >= filteredPosts.length ? null : endIndex.toString(),
     };
   },
 });
@@ -377,7 +391,10 @@ export const getSavedPosts = query({
 export const createPost = mutation({
   args: {
     clerkId: v.string(),
-    imageId: v.id("_storage"),
+    imageId: v.optional(v.id("_storage")),
+    imageIds: v.optional(v.array(v.id("_storage"))),
+    videoId: v.optional(v.id("_storage")),
+    mediaType: v.union(v.literal("image"), v.literal("video"), v.literal("carousel")),
     caption: v.optional(v.string()),
     hashtags: v.optional(v.array(v.string())),
     location: v.optional(v.string()),
@@ -390,13 +407,33 @@ export const createPost = mutation({
 
     if (!user) throw new Error("User not found");
 
-    const imageUrl = await ctx.storage.getUrl(args.imageId);
-    if (!imageUrl) throw new Error("Failed to get image URL");
+    let imageUrl, imageUrls, videoUrl;
+
+    if (args.mediaType === "image" && args.imageId) {
+      imageUrl = await ctx.storage.getUrl(args.imageId);
+      if (!imageUrl) throw new Error("Failed to get image URL");
+    } else if (args.mediaType === "carousel" && args.imageIds) {
+      imageUrls = await Promise.all(
+        args.imageIds.map(async (id) => {
+          const url = await ctx.storage.getUrl(id);
+          if (!url) throw new Error("Failed to get image URL");
+          return url;
+        })
+      );
+    } else if (args.mediaType === "video" && args.videoId) {
+      videoUrl = await ctx.storage.getUrl(args.videoId);
+      if (!videoUrl) throw new Error("Failed to get video URL");
+    }
 
     const postId = await ctx.db.insert("posts", {
       userId: user._id,
       imageUrl,
       imageId: args.imageId,
+      imageUrls,
+      imageIds: args.imageIds,
+      videoUrl,
+      videoId: args.videoId,
+      mediaType: args.mediaType,
       caption: args.caption,
       hashtags: args.hashtags,
       location: args.location,

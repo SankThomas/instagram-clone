@@ -24,7 +24,9 @@ import {
   Home,
   Instagram,
   LogOut,
+  MessageCircle,
   Moon,
+  Play,
   Plus,
   Search,
   Settings,
@@ -62,6 +64,7 @@ export default function Sidebar() {
       label: "Notifications",
       badge: unreadCount,
     },
+    { href: "/messages", icon: MessageCircle, label: "Messages" },
     {
       href: "#",
       icon: Plus,

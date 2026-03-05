@@ -132,11 +132,25 @@ export default function Navigation() {
               Explore
             </Link>
             <Link
+              href="/reels"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="block p-3 rounded-lg hover:bg-secondary transition-colors"
+            >
+              Reels
+            </Link>
+            <Link
               href="/notifications"
               onClick={() => setIsMobileMenuOpen(false)}
               className="block p-3 rounded-lg hover:bg-secondary transition-colors"
             >
               Notifications
+            </Link>
+            <Link
+              href="/messages"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="block p-3 rounded-lg hover:bg-secondary transition-colors"
+            >
+              Messages
             </Link>
             {currentUser && (
               <Link

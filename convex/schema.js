@@ -24,8 +24,13 @@ export default defineSchema({
 
   posts: defineTable({
     userId: v.id("users"),
-    imageUrl: v.string(),
-    imageId: v.id("_storage"),
+    imageUrl: v.optional(v.string()),
+    imageId: v.optional(v.id("_storage")),
+    imageUrls: v.optional(v.array(v.string())),
+    imageIds: v.optional(v.array(v.id("_storage"))),
+    videoUrl: v.optional(v.string()),
+    videoId: v.optional(v.id("_storage")),
+    mediaType: v.union(v.literal("image"), v.literal("video"), v.literal("carousel")),
     caption: v.optional(v.string()),
     hashtags: v.optional(v.array(v.string())),
     location: v.optional(v.string()),
@@ -36,7 +41,33 @@ export default defineSchema({
   })
     .index("by_userId", ["userId"])
     .index("by_createdAt", ["createdAt"])
-    .index("by_hashtags", ["hashtags"]),
+    .index("by_hashtags", ["hashtags"])
+    .index("by_mediaType", ["mediaType"]),
+
+  messages: defineTable({
+    senderId: v.id("users"),
+    receiverId: v.id("users"),
+    content: v.string(),
+    messageType: v.union(v.literal("text"), v.literal("image"), v.literal("post")),
+    imageUrl: v.optional(v.string()),
+    imageId: v.optional(v.id("_storage")),
+    postId: v.optional(v.id("posts")),
+    isRead: v.optional(v.boolean()),
+    createdAt: v.number(),
+  })
+    .index("by_senderId", ["senderId"])
+    .index("by_receiverId", ["receiverId"])
+    .index("by_senderId_receiverId", ["senderId", "receiverId"])
+    .index("by_createdAt", ["createdAt"]),
+
+  conversations: defineTable({
+    participants: v.array(v.id("users")),
+    lastMessageId: v.optional(v.id("messages")),
+    lastMessageAt: v.optional(v.number()),
+    createdAt: v.number(),
+  })
+    .index("by_participants", ["participants"])
+    .index("by_lastMessageAt", ["lastMessageAt"]),
 
   likes: defineTable({
     userId: v.id("users"),

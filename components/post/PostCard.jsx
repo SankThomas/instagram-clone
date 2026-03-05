@@ -220,7 +220,7 @@ export default function PostCard({ post }) {
               <MessageCircle className="size-6" />
             </Button>
 
-            <Button variant="ghost" size="sm">
+            <Button variant="ghost" size="sm" onClick={handleShare}>
               <Share className="size-6" />
             </Button>
           </div>

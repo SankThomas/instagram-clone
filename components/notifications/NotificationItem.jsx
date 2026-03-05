@@ -6,7 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { formatDistanceToNow } from "date-fns";
 import Image from "next/image";
 
-export default function NotificationItem({ notification, onMarkAsRead }) {
+export default function NotificationItem({ notification, onMarkAsRead, onDelete }) {
   const { user } = useUser();
 
   const getNotificationIcon = (type) => {

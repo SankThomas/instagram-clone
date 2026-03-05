@@ -74,7 +74,7 @@ export default function CommentItem({
               variant="ghost"
               size="sm"
               onClick={onDelete}
-              className="h-auto p-0 text-xs text-error hover:text-error opacity-0 group-hover:opacity-100 transition-opacity"
+              className="h-auto p-0 text-xs text-destructive hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
             >
               <Trash2 className="size-3" />
             </Button>

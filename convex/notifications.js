@@ -116,3 +116,25 @@ export const markAllNotificationsAsRead = mutation({
     return unreadNotifications.length;
   },
 });
+
+export const deleteNotification = mutation({
+  args: {
+    clerkId: v.string(),
+    notificationId: v.id("notifications"),
+  },
+  handler: async (ctx, args) => {
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_clerkId", (q) => q.eq("clerkId", args.clerkId))
+      .first();
+
+    if (!user) throw new Error("User not found");
+
+    const notification = await ctx.db.get(args.notificationId);
+    if (!notification) throw new Error("Notification not found");
+    if (notification.userId !== user._id) throw new Error("Not authorized");
+
+    await ctx.db.delete(args.notificationId);
+    return true;
+  },
+});
