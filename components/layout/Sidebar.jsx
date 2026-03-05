@@ -24,7 +24,9 @@ import {
   Home,
   Instagram,
   LogOut,
+  MessageCircle,
   Moon,
+  Play,
   Plus,
   Search,
   Settings,
@@ -57,17 +59,19 @@ export default function Sidebar() {
     { href: "/search", icon: Search, label: "Search" },
     { href: "/explore", icon: Compass, label: "Explore" },
     {
-      href: "/notifications",
-      icon: Heart,
-      label: "Notifications",
-      badge: unreadCount,
-    },
-    {
       href: "#",
       icon: Plus,
       label: "Create",
       onClick: () => setIsCreateModalOpen(true),
     },
+    {
+      href: "/notifications",
+      icon: Heart,
+      label: "Notifications",
+      badge: unreadCount,
+    },
+    { href: "/messages", icon: MessageCircle, label: "Messages" },
+    { href: "/reels", icon: Play, label: "Reels" },
     {
       href: `/profile/${currentUser?.username}`,
       icon: User,
@@ -107,7 +111,7 @@ export default function Sidebar() {
                       className={cn(
                         "w-full justify-start gap-3 h-12 text-base font-normal relative",
                         pathname === item.href
-                          ? "bg-primary text-secondary hover:bg-primary/90 hover:text-secondary"
+                          ? "bg-secondary text-primary"
                           : "",
                         "transition-colors",
                       )}
@@ -146,7 +150,7 @@ export default function Sidebar() {
                         </AvatarFallback>
                       </Avatar>
 
-                      <div className="flex-1 truncate">
+                      <div className="flex-1 text-left truncate">
                         <div className="font-medium truncate">
                           {currentUser.displayName || currentUser.username}
                         </div>
