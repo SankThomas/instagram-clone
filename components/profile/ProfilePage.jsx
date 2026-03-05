@@ -171,7 +171,9 @@ export default function ProfilePage({ username }) {
         </Tabs>
       )}
 
-      {!isOwnProfile && <ProfilePosts userId={user._id} />}
+      {!isOwnProfile && (
+        <ProfilePosts userId={user._id} isOwnProfile={isOwnProfile} />
+      )}
 
       {/* Edit Profile Modal */}
       <EditProfileModal
