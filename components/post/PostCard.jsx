@@ -257,14 +257,13 @@ export default function PostCard({ post }) {
             </div>
 
             {post.hashtags?.length > 0 && (
-              <div className="flex flex-wrap gap-1">
+              <div className="flex flex-wrap gap-1 mt-2">
                 {post.hashtags.map((hashtag, index) => (
-                  <span
-                    key={index}
-                    className="text-primary text-xs bg-secondary/50 p-1 rounded-lg hover:bg-secondary transition"
-                  >
-                    #{hashtag}
-                  </span>
+                  <Link key={index} href={`/hashtag/${hashtag}`}>
+                    <span className="text-primary text-xs hover:underline cursor-pointer">
+                      #{hashtag}
+                    </span>
+                  </Link>
                 ))}
               </div>
             )}
