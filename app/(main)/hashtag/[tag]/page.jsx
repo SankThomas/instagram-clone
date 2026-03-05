@@ -29,7 +29,7 @@ export default function HashtagPage() {
       <div className="space-y-6">
         <div className="text-center py-8">
           <div className="size-24 mx-auto mb-4 bg-secondary rounded-full flex items-center justify-center animate-pulse">
-            <Hash className="size-12 text-text-muted" />
+            <Hash className="size-12 text-muted-foreground" />
           </div>
           <div className="w-48 h-8 bg-secondary rounded mx-auto mb-2 animate-pulse"></div>
           <div className="w-32 h-4 bg-secondary rounded mx-auto animate-pulse"></div>
@@ -51,7 +51,7 @@ export default function HashtagPage() {
       <div className="space-y-6">
         <div className="text-center py-8">
           <div className="size-24 mx-auto mb-4 bg-secondary rounded-full flex items-center justify-center">
-            <Hash className="size-12 text-text-muted" />
+            <Hash className="size-12 text-muted-foreground" />
           </div>
           <h1 className="text-3xl font-bold mb-2">
             #{decodeURIComponent(tag)}
@@ -83,16 +83,27 @@ export default function HashtagPage() {
           {posts.map((post) => (
             <div
               key={post._id}
-              className="relative aspect-square cursor-pointer group"
+              className="relative aspect-square cursor-pointer group border rounded"
               onClick={() => setSelectedPost(post)}
             >
-              <Image
-                src={post.imageUrl}
-                alt={post.caption || "Post"}
-                fill
-                className="object-cover rounded"
-                sizes="(max-width: 640px) 33vw, (max-width: 1024px) 25vw, 20vw"
-              />
+              {post.mediaType === "video" && post.videoUrl ? (
+                <video
+                  src={post?.videoUrl}
+                  controls={false}
+                  poster={post.thumbnailUrl}
+                  className="w-full h-full object-contain"
+                  preload="metadata"
+                />
+              ) : (
+                <Image
+                  src={post.imageUrls ? post.imageUrls[0] : post.imageUrl}
+                  alt={post.caption || "Post image"}
+                  fill
+                  className="object-contain"
+                  sizes="(max-width: 640px) 100vw, 640px"
+                  priority
+                />
+              )}
               <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded flex items-center justify-center">
                 <div className="flex items-center gap-4 text-white">
                   <div className="flex items-center gap-1">
