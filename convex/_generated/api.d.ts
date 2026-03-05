@@ -11,8 +11,10 @@
 import type * as comments from "../comments.js";
 import type * as follows from "../follows.js";
 import type * as http from "../http.js";
+import type * as messages from "../messages.js";
 import type * as notifications from "../notifications.js";
 import type * as posts from "../posts.js";
+import type * as reels from "../reels.js";
 import type * as storage from "../storage.js";
 import type * as users from "../users.js";
 
@@ -26,8 +28,10 @@ declare const fullApi: ApiFromModules<{
   comments: typeof comments;
   follows: typeof follows;
   http: typeof http;
+  messages: typeof messages;
   notifications: typeof notifications;
   posts: typeof posts;
+  reels: typeof reels;
   storage: typeof storage;
   users: typeof users;
 }>;
