@@ -4,16 +4,7 @@ import { api } from "@/convex/_generated/api";
 import { useUser } from "@clerk/nextjs";
 import { useMutation, useQuery } from "convex/react";
 import { formatDistanceToNow } from "date-fns";
-import {
-  Bookmark,
-  Copy,
-  Heart,
-  MessageCircle,
-  MoreHorizontal,
-  Share,
-  Share as ShareIcon,
-  Trash2,
-} from "lucide-react";
+import { Bookmark, Copy, Heart, MessageCircle, MoveHorizontal as MoreHorizontal, Share, Share as ShareIcon, Trash2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -220,7 +211,7 @@ export default function PostCard({ post }) {
               <MessageCircle className="size-6" />
             </Button>
 
-            <Button variant="ghost" size="sm" onClick={handleShare}>
+            <Button variant="ghost" size="sm">
               <Share className="size-6" />
             </Button>
           </div>

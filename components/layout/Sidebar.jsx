@@ -17,23 +17,7 @@ import { api } from "@/convex/_generated/api";
 import { cn } from "@/lib/utils";
 import { SignOutButton, useUser } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
-import {
-  Bookmark,
-  Compass,
-  Heart,
-  Home,
-  Instagram,
-  LogOut,
-  MessageCircle,
-  Moon,
-  Play,
-  Plus,
-  Search,
-  Settings,
-  Sun,
-  User,
-} from "lucide-react";
-import { useTheme } from "next-themes";
+import { Bookmark, Compass, Heart, Hop as Home, Instagram, LogOut, MessageCircle, Moon, Play, Plus, Search, Settings, Sun, User } from "lucide-react"m "next-themes";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
@@ -58,13 +42,13 @@ export default function Sidebar() {
     { href: "/", icon: Home, label: "Home" },
     { href: "/search", icon: Search, label: "Search" },
     { href: "/explore", icon: Compass, label: "Explore" },
+    { href: "/reels", icon: Play, label: "Reels" },
     {
       href: "/notifications",
       icon: Heart,
       label: "Notifications",
       badge: unreadCount,
     },
-    { href: "/messages", icon: MessageCircle, label: "Messages" },
     {
       href: "#",
       icon: Plus,
