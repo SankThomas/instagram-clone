@@ -113,6 +113,10 @@ export default function PostCard({ post }) {
     }
   };
 
+  const handleShare = () => {};
+
+  const handleCopyLink = () => {};
+
   const isOwner = currentUser && post.user._id === currentUser._id;
 
   return (
@@ -172,12 +176,12 @@ export default function PostCard({ post }) {
               </DropdownMenuItem>
             )}
 
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={handleShare}>
               <ShareIcon className="size-4 mr-1" />
               Share
             </DropdownMenuItem>
 
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={handleCopyLink}>
               <Copy className="size-4 mr-1" />
               Copy link
             </DropdownMenuItem>
@@ -185,17 +189,27 @@ export default function PostCard({ post }) {
         </DropdownMenu>
       </div>
 
-      <div className="relative w-full aspect-square">
-        <div className="absolute inset-0" style={{ aspectRatio: "auto" }}>
+      <div className="relative w-full aspect-square bg-black">
+        {post.mediaType === "video" && post.videoUrl ? (
+          <video
+            src={post?.videoUrl}
+            controls
+            autoPlay
+            loop
+            poster={post.thumbnailUrl}
+            className="w-full h-full object-contain"
+            preload="metadata"
+          />
+        ) : (
           <Image
-            src={post.imageUrl}
+            src={post.imageUrls ? post.imageUrls[0] : post.imageUrl}
             alt={post.caption || "Post image"}
             fill
             className="object-contain"
             sizes="(max-width: 640px) 100vw, 640px"
             priority
           />
-        </div>
+        )}
       </div>
 
       <div className="p-4 space-y-3">
@@ -295,14 +309,9 @@ export default function PostCard({ post }) {
             </Button>
           )}
         </form>
-      </div>
 
-      {showComments && (
-        <CommentSection
-          postId={post._id}
-          onClose={() => setShowComments(false)}
-        />
-      )}
+        {showComments && <CommentSection postId={post._id} />}
+      </div>
     </article>
   );
 }
