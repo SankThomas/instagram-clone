@@ -8,6 +8,7 @@ import { useUser } from "@clerk/nextjs";
 import { useMutation, usePaginatedQuery, useQuery } from "convex/react";
 import { Bell } from "lucide-react";
 import { NotificationSkeleton } from "@/components/ui/LoadingSkeleton";
+import { toast } from "sonner";
 
 export default function NotificationsPage() {
   const { user } = useUser();
@@ -29,6 +30,25 @@ export default function NotificationsPage() {
   const markAllAsRead = useMutation(
     api.notifications.markAllNotificationsAsRead,
   );
+  const deleteNotification = useMutation(api.notifications.deleteNotification);
+
+  const handleDeleteNotification = async (id) => {
+    try {
+      if (!user || !id) return;
+
+      await deleteNotification({
+        clerkId: user.id,
+        notificationId: id,
+      });
+
+      toast.success("Notification deleted");
+    } catch (error) {
+      console.error("Failed to delete notification:", error);
+      toast.error(
+        "An error occurred when trying to delete this notification. Please try again later.",
+      );
+    }
+  };
 
   const handleMarkAllAsRead = async () => {
     if (!user) return;
@@ -58,7 +78,7 @@ export default function NotificationsPage() {
     return (
       <div className="text-center py-12">
         <div className="size-24 mx-auto mb-6 bg-secondary rounded-full flex items-center justify-center">
-          <Bell className="size-12 text-text-muted" />
+          <Bell className="size-12 text-muted-foreground" />
         </div>
         <h3 className="text-xl font-semibold mb-2">No notifications yet</h3>
         <p className="text-text-secondary">
@@ -88,6 +108,7 @@ export default function NotificationsPage() {
             key={notification._id}
             notification={notification}
             onMarkAsRead={markAsRead}
+            onDelete={handleDeleteNotification}
           />
         ))}
       </div>
