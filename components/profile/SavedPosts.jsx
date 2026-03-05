@@ -38,7 +38,11 @@ export default function SavedPosts() {
   if (!posts || posts.length === 0) {
     return (
       <div className="text-center py-12">
-        <Bookmark className="size-12 mx-auto mb-4 text-text-muted" />
+        <div className="size-24 mx-auto mb-6 bg-secondary rounded-full flex items-center justify-center">
+          <div className="size-12 bg-text-muted rounded-full flex items-center justify-center">
+            <Bookmark className="size-12 text-muted-foreground" />
+          </div>
+        </div>
         <h3 className="text-xl font-semibold mb-2">No saved posts yet</h3>
         <p className="text-text-secondary">
           When you save posts, they will appear here.
@@ -56,13 +60,25 @@ export default function SavedPosts() {
             className="relative aspect-square cursor-pointer group"
             onClick={() => setSelectedPost(post)}
           >
-            <Image
-              src={post.imageUrl}
-              alt={post.caption || "Post"}
-              fill
-              className="object-cover rounded"
-              sizes="(max-width: 640px) 33vw, (max-width: 1024px) 25vw, 20vw"
-            />
+            {post.mediaType === "video" && post.videoUrl ? (
+              <video
+                src={post?.videoUrl}
+                controls={false}
+                poster={post.thumbnailUrl}
+                className="w-full h-full object-contain"
+                preload="metadata"
+              />
+            ) : (
+              <Image
+                src={post.imageUrls ? post.imageUrls[0] : post.imageUrl}
+                alt={post.caption || "Post image"}
+                fill
+                className="object-contain"
+                sizes="(max-width: 640px) 100vw, 640px"
+                priority
+              />
+            )}
+
             <div className="absolute inset-0 group-hover:bg-black/50 group-hover:bg-opacity-30 transition-all duration-200 rounded flex items-center justify-center">
               <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center gap-4 text-white">
                 <div className="flex items-center gap-1">
