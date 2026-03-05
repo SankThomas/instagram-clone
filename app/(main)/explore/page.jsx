@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { usePaginatedQuery } from "convex/react";
-import { useUser } from "@clerk/nextjs";
-import { api } from "@/convex/_generated/api";
-import Image from "next/image";
-import { Heart, MessageCircle } from "lucide-react";
 import PostModal from "@/components/profile/PostModal";
+import { api } from "@/convex/_generated/api";
+import { useUser } from "@clerk/nextjs";
+import { usePaginatedQuery } from "convex/react";
+import { Heart, MessageCircle, User } from "lucide-react";
+import Image from "next/image";
+import { useState } from "react";
 
 export default function ExplorePage() {
   const [selectedPost, setSelectedPost] = useState(null);
@@ -43,6 +43,11 @@ export default function ExplorePage() {
       <div className="space-y-6">
         <h1 className="text-2xl font-bold">Explore</h1>
         <div className="text-center py-12">
+          <div className="size-24 mx-auto mb-6 bg-secondary rounded-full flex items-center justify-center">
+            <div className="size-12 bg-text-muted rounded-full flex items-center justify-center">
+              <User className="size-12 text-muted-foreground" />
+            </div>
+          </div>
           <h3 className="text-xl font-semibold mb-2">No posts to explore</h3>
           <p className="text-text-secondary">
             Check back later for new content to discover.
@@ -61,18 +66,30 @@ export default function ExplorePage() {
           {posts.map((post, index) => (
             <div
               key={post._id}
-              className={`relative cursor-pointer group ${
+              className={`relative cursor-pointer group border rounded ${
                 index % 7 === 1 ? "col-span-2 row-span-2" : "aspect-square"
               }`}
               onClick={() => setSelectedPost(post)}
             >
-              <Image
-                src={post.imageUrl}
-                alt={post.caption || "Post"}
-                fill
-                className="object-cover rounded"
-                sizes="(max-width: 640px) 33vw, (max-width: 1024px) 25vw, 20vw"
-              />
+              {post.mediaType === "video" && post.videoUrl ? (
+                <video
+                  src={post?.videoUrl}
+                  controls={false}
+                  poster={post.thumbnailUrl}
+                  className="w-full h-full object-contain"
+                  preload="metadata"
+                />
+              ) : (
+                <Image
+                  src={post.imageUrls ? post.imageUrls[0] : post.imageUrl}
+                  alt={post.caption || "Post image"}
+                  fill
+                  className="object-contain"
+                  sizes="(max-width: 640px) 100vw, 640px"
+                  priority
+                />
+              )}
+
               <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded flex items-center justify-center">
                 <div className="flex items-center gap-4 text-white">
                   <div className="flex items-center gap-1">
