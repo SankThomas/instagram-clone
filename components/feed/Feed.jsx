@@ -5,11 +5,13 @@ import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { Button } from "@/components/ui/button";
 import { api } from "@/convex/_generated/api";
 import { useUser } from "@clerk/nextjs";
-import { usePaginatedQuery, useQuery } from "convex/react";
+import { usePaginatedQuery } from "convex/react";
+import { User } from "lucide-react";
+import Link from "next/link";
 import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
-import SuggestedUsers from "./SuggestedUsers";
 import { PostSkeleton } from "../ui/LoadingSkeleton";
+import SuggestedUsers from "./SuggestedUsers";
 
 export default function Feed() {
   const { user } = useUser();
@@ -62,17 +64,24 @@ export default function Feed() {
 
   if (!posts || posts.length === 0) {
     return (
-      <div className="text-center py-12">
-        <div className="size-24 mx-auto mb-6 bg-secondary rounded-full flex items-center justify-center">
-          <div className="size-12 bg-text-muted rounded-full"></div>
+      <div className="flex items-start justify-between gap-8">
+        <div className="text-center py-12">
+          <div className="size-24 mx-auto mb-6 bg-secondary rounded-full flex items-center justify-center">
+            <div className="size-12 bg-text-muted rounded-full flex items-center justify-center">
+              <User className="size-12 text-muted-foreground" />
+            </div>
+          </div>
+          <h3 className="text-xl font-semibold mb-2">No posts yet</h3>
+          <p className="text-text-secondary mb-6">
+            Start following people to see their posts in your feed.
+          </p>
+
+          <Button asChild>
+            <Link href="/search">Find people to follow</Link>
+          </Button>
         </div>
-        <h3 className="text-xl font-semibold mb-2">No posts yet</h3>
-        <p className="text-text-secondary mb-6">
-          Start following people to see their posts in your feed.
-        </p>
-        <Button asChild>
-          <a href="/search">Find people to follow</a>
-        </Button>
+
+        <SuggestedUsers />
       </div>
     );
   }
