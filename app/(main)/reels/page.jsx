@@ -21,7 +21,7 @@ export default function ReelsPage() {
     status,
     loadMore,
   } = usePaginatedQuery(
-    api.posts.getReelsPosts,
+    api.reels.getReels,
     { clerkId: user?.id },
     { initialNumItems: 10 },
   );
