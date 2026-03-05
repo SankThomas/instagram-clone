@@ -77,18 +77,30 @@ export default function PostModal({ post, onClose }) {
   return (
     <Dialog open={!!post} onOpenChange={onClose}>
       <DialogTitle></DialogTitle>
-      <DialogContent className="max-w-6xl! max-h-[90vh]! h-full p-0 overflow-hidden">
+      <DialogContent className="max-w-6xl! max-h-[90vh]! h-full p-0 overflow-auto">
         <div className="grid md:grid-cols-2 h-full">
           {/* Image */}
-          <div className="relative bg-black flex items-center justify-center">
-            <Image
-              src={post.imageUrl}
-              alt={post.caption || "Post image"}
-              width={600}
-              height={600}
-              className="max-w-full max-h-full object-contain"
-              priority
-            />
+          <div className="relative w-full aspect-square bg-black">
+            {post.mediaType === "video" && post.videoUrl ? (
+              <video
+                src={post?.videoUrl}
+                controls
+                autoPlay
+                loop
+                poster={post.thumbnailUrl}
+                className="w-full h-full object-contain"
+                preload="metadata"
+              />
+            ) : (
+              <Image
+                src={post.imageUrls ? post.imageUrls[0] : post.imageUrl}
+                alt={post.caption || "Post image"}
+                fill
+                className="object-contain"
+                sizes="(max-width: 640px) 100vw, 640px"
+                priority
+              />
+            )}
           </div>
 
           {/* Post Details */}
