@@ -21,14 +21,16 @@ import { toast } from "sonner";
 
 export default function CreatePostModal({ isOpen, onClose }) {
   const [step, setStep] = useState(1); // 1: Upload, 2: Edit
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [preview, setPreview] = useState("");
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [previews, setPreviews] = useState([]);
+  const [mediaType, setMediaType] = useState("image");
   const [caption, setCaption] = useState("");
   const [hashtags, setHashtags] = useState([]);
   const [hashtagInput, setHashtagInput] = useState("");
   const [location, setLocation] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
+  const [currentPreviewIndex, setCurrentPreviewIndex] = useState(0);
 
   const fileInputRef = useRef(null);
   const { user } = useUser();
@@ -37,38 +39,121 @@ export default function CreatePostModal({ isOpen, onClose }) {
 
   const resetForm = () => {
     setStep(1);
-    setSelectedFile(null);
-    setPreview("");
+    setSelectedFiles([]);
+    setPreviews([]);
+    setMediaType("image");
     setCaption("");
     setHashtags([]);
     setHashtagInput("");
     setLocation("");
     setIsUploading(false);
     setIsCreating(false);
+    setCurrentPreviewIndex(0);
   };
 
   const handleFileSelect = (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
 
-    if (!file.type.startsWith("image/")) {
-      toast.error("Please select an image file");
+    // Check file types and sizes
+    const validFiles = [];
+    const newPreviews = [];
+    let detectedMediaType = "image";
+
+    for (const file of files) {
+      if (!file.type.startsWith("image/") && !file.type.startsWith("video/")) {
+        toast.error("Please select only image or video files");
+        continue;
+      }
+
+      if (file.size > 50 * 1024 * 1024) {
+        // 50MB limit
+        toast.error("File size must be less than 50MB");
+        continue;
+      }
+
+      if (file.type.startsWith("video/")) {
+        detectedMediaType = "video";
+      }
+
+      validFiles.push(file);
+    }
+
+    if (validFiles.length === 0) return;
+
+    // If multiple files, it's a carousel (images only)
+    if (validFiles.length > 1) {
+      const hasVideo = validFiles.some((file) =>
+        file.type.startsWith("video/"),
+      );
+      if (hasVideo) {
+        toast.error("Cannot mix videos with other files");
+        return;
+      }
+      detectedMediaType = "carousel";
+    }
+
+    setMediaType(detectedMediaType);
+    setSelectedFiles(validFiles);
+
+    // Generate previews
+    validFiles.forEach((file, index) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        newPreviews[index] = e.target?.result;
+        if (newPreviews.length === validFiles.length) {
+          setPreviews([...newPreviews]);
+          setStep(2);
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const nextPreview = () => {
+    setCurrentPreviewIndex((prev) =>
+      prev === previews.length - 1 ? 0 : prev + 1,
+    );
+  };
+
+  const prevPreview = () => {
+    setCurrentPreviewIndex((prev) =>
+      prev === 0 ? previews.length - 1 : prev - 1,
+    );
+  };
+
+  const handleFileInputClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+      fileInputRef.current.click();
+    }
+  };
+
+  const removeFile = (indexToRemove) => {
+    const newFiles = selectedFiles.filter(
+      (_, index) => index !== indexToRemove,
+    );
+    const newPreviews = previews.filter((_, index) => index !== indexToRemove);
+
+    setSelectedFiles(newFiles);
+    setPreviews(newPreviews);
+
+    if (newFiles.length === 0) {
+      setStep(1);
       return;
     }
 
-    if (file.size > 10 * 1024 * 1024) {
-      // 10MB limit
-      toast.error("Image size must be less than 10MB");
-      return;
+    // Update media type
+    if (newFiles.length === 1) {
+      setMediaType(newFiles[0].type.startsWith("video/") ? "video" : "image");
+    } else {
+      setMediaType("carousel");
     }
 
-    setSelectedFile(file);
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      setPreview(e.target?.result);
-      setStep(2);
-    };
-    reader.readAsDataURL(file);
+    // Adjust current preview index
+    if (currentPreviewIndex >= newPreviews.length) {
+      setCurrentPreviewIndex(Math.max(0, newPreviews.length - 1));
+    }
   };
 
   const handleAddHashtag = (e) => {
@@ -111,18 +196,33 @@ export default function CreatePostModal({ isOpen, onClose }) {
   };
 
   const handleSubmit = async () => {
-    if (!selectedFile || !user) return;
+    if (selectedFiles.length === 0 || !user) return;
 
     setIsCreating(true);
 
     try {
       setIsUploading(true);
-      const imageId = await uploadFile(selectedFile);
+
+      let imageId, imageIds, videoId;
+
+      if (mediaType === "image") {
+        imageId = await uploadFile(selectedFiles[0]);
+      } else if (mediaType === "carousel") {
+        imageIds = await Promise.all(
+          selectedFiles.map((file) => uploadFile(file)),
+        );
+      } else if (mediaType === "video") {
+        videoId = await uploadFile(selectedFiles[0]);
+      }
+
       setIsUploading(false);
 
       await createPost({
         clerkId: user.id,
         imageId,
+        imageIds,
+        videoId,
+        mediaType,
         caption: caption.trim() || undefined,
         hashtags: hashtags.length > 0 ? hashtags : undefined,
         location: location.trim() || undefined,
@@ -147,7 +247,7 @@ export default function CreatePostModal({ isOpen, onClose }) {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-4xl! max-h-[70vh]! h-full overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Create new post</DialogTitle>
         </DialogHeader>
@@ -155,15 +255,15 @@ export default function CreatePostModal({ isOpen, onClose }) {
         {step === 1 && (
           <div className="space-y-6">
             <div
-              onClick={() => fileInputRef.current?.click()}
+              onClick={handleFileInputClick}
               className="border-2 border-dashed border-border rounded-lg p-12 text-center cursor-pointer hover:border-primary transition-colors"
             >
               <ImageIcon className="size-16 mx-auto mb-4 text-text-secondary" />
               <h3 className="text-lg font-semibold mb-2">
-                Select photo to share
+                Select photos or videos to share
               </h3>
               <p className="text-text-secondary mb-4">
-                Choose a photo from your computer
+                Choose photos or videos from your computer
               </p>
               <Button>
                 <Upload className="size-4 mr-2" />
@@ -174,7 +274,8 @@ export default function CreatePostModal({ isOpen, onClose }) {
             <input
               ref={fileInputRef}
               type="file"
-              accept="image/*"
+              accept="image/*,video/*"
+              multiple
               onChange={handleFileSelect}
               className="hidden"
             />
@@ -186,12 +287,61 @@ export default function CreatePostModal({ isOpen, onClose }) {
             <div className="grid md:grid-cols-2 gap-6">
               {/* Image Preview */}
               <div className="relative aspect-square bg-secondary rounded-lg overflow-hidden">
-                <Image
-                  src={preview}
-                  alt="Post preview"
-                  fill
-                  className="object-cover"
-                />
+                {mediaType === "video" ? (
+                  <video
+                    src={previews[0]}
+                    className="w-full h-full object-cover"
+                    controls
+                    muted
+                  />
+                ) : (
+                  <Image
+                    src={previews[currentPreviewIndex]}
+                    alt="Post preview"
+                    fill
+                    className="object-cover"
+                  />
+                )}
+
+                {/* Navigation for multiple images */}
+                {previews.length > 1 && (
+                  <>
+                    <button
+                      onClick={prevPreview}
+                      className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/50 text-white rounded-full p-2 hover:bg-black/70"
+                    >
+                      ←
+                    </button>
+                    <button
+                      onClick={nextPreview}
+                      className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/50 text-white rounded-full p-2 hover:bg-black/70"
+                    >
+                      →
+                    </button>
+                    <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex gap-1">
+                      {previews.map((_, index) => (
+                        <div
+                          key={index}
+                          className={`size-2 rounded-full ${
+                            index === currentPreviewIndex
+                              ? "bg-white"
+                              : "bg-white/50"
+                          }`}
+                        />
+                      ))}
+                    </div>
+                  </>
+                )}
+
+                {/* Remove file button */}
+                {selectedFiles.length > 1 && (
+                  <button
+                    onClick={() => removeFile(currentPreviewIndex)}
+                    className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+                  >
+                    <X className="size-4" />
+                  </button>
+                )}
               </div>
 
               {/* Post Details */}
