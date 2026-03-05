@@ -1,5 +1,6 @@
 import { v } from "convex/values";
 import { query, mutation } from "./_generated/server";
+import { paginationOptsValidator } from "convex/server";
 
 export const isFollowing = query({
   args: {
@@ -62,19 +63,14 @@ export const getFollowers = query({
 export const getFollowing = query({
   args: {
     userId: v.id("users"),
-    paginationOpts: v.optional(
-      v.object({
-        numItems: v.number(),
-        cursor: v.optional(v.string()),
-      }),
-    ),
+    paginationOpts: paginationOptsValidator,
   },
   handler: async (ctx, args) => {
     const follows = await ctx.db
       .query("follows")
       .withIndex("by_followerId", (q) => q.eq("followerId", args.userId))
       .order("desc")
-      .paginate(args.paginationOpts || { numItems: 20 });
+      .paginate(args.paginationOpts);
 
     const followingWithUserData = await Promise.all(
       follows.page.map(async (follow) => {
