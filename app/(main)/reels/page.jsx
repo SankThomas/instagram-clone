@@ -145,12 +145,10 @@ export default function ReelsPage() {
                         reel.user.username?.[0]?.toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
-
                   <div>
                     <div className="font-semibold text-white">
                       {reel.user.displayName || reel.user.username}
                     </div>
-
                     <div className="text-xs text-white/80">
                       {formatDistanceToNow(new Date(reel.createdAt), {
                         addSuffix: true,

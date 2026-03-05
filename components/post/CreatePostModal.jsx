@@ -214,7 +214,6 @@ export default function CreatePostModal({ isOpen, onClose }) {
       } else if (mediaType === "video") {
         videoId = await uploadFile(selectedFiles[0]);
       }
-
       setIsUploading(false);
 
       await createPost({
@@ -302,7 +301,6 @@ export default function CreatePostModal({ isOpen, onClose }) {
                     className="object-cover"
                   />
                 )}
-
                 {/* Navigation for multiple images */}
                 {previews.length > 1 && (
                   <>
@@ -332,7 +330,6 @@ export default function CreatePostModal({ isOpen, onClose }) {
                     </div>
                   </>
                 )}
-
                 {/* Remove file button */}
                 {selectedFiles.length > 1 && (
                   <button
