@@ -37,7 +37,7 @@ export default function SearchPage() {
         {searchQuery.length === 0 ? (
           <div className="text-center py-12">
             <div className="size-24 mx-auto mb-6 bg-secondary rounded-full flex items-center justify-center">
-              <Users className="size-12 text-text-muted" />
+              <Users className="size-12 text-muted-foreground" />
             </div>
             <h3 className="text-xl font-semibold mb-2">Search for people</h3>
             <p className="text-text-secondary">
@@ -46,6 +46,9 @@ export default function SearchPage() {
           </div>
         ) : searchResults && searchResults.length === 0 ? (
           <div className="text-center py-12">
+            <div className="size-24 mx-auto mb-6 bg-secondary rounded-full flex items-center justify-center">
+              <Users className="size-12 text-muted-foreground" />
+            </div>
             <p className="text-text-secondary">
               No users found for &apos;{searchQuery}&apos;
             </p>
