@@ -242,44 +242,62 @@ export const deleteComment = mutation({
     if (!comment) throw new Error("Comment not found");
     if (comment.userId !== user._id) throw new Error("Not authorized");
 
-    // Delete replies and their likes
-    const replies = await ctx.db
-      .query("comments")
-      .withIndex("by_parentCommentId", (q) =>
-        q.eq("parentCommentId", args.commentId),
-      )
-      .collect();
+    // If this is a parent comment, delete all replies first
+    if (!comment.parentCommentId) {
+      const replies = await ctx.db
+        .query("comments")
+        .withIndex("by_parentCommentId", (q) =>
+          q.eq("parentCommentId", args.commentId),
+        )
+        .collect();
 
-    const allCommentIds = [args.commentId, ...replies.map((r) => r._id)];
+      const allCommentIds = [args.commentId, ...replies.map((r) => r._id)];
 
-    // Delete all comment likes for this comment and its replies
-    const commentLikes = await Promise.all(
-      allCommentIds.map((id) =>
-        ctx.db
-          .query("commentLikes")
-          .withIndex("by_commentId", (q) => q.eq("commentId", id))
-          .collect(),
-      ),
-    );
+      // Delete all comment likes for this comment and its replies
+      const commentLikes = await Promise.all(
+        allCommentIds.map((id) =>
+          ctx.db
+            .query("commentLikes")
+            .withIndex("by_commentId", (q) => q.eq("commentId", id))
+            .collect(),
+        ),
+      );
 
-    const allLikes = commentLikes.flat();
+      const allLikes = commentLikes.flat();
 
-    await Promise.all([
-      ...allLikes.map((like) => ctx.db.delete(like._id)),
-      ...replies.map((reply) => ctx.db.delete(reply._id)),
-    ]);
+      await Promise.all([
+        ...allLikes.map((like) => ctx.db.delete(like._id)),
+        ...replies.map((reply) => ctx.db.delete(reply._id)),
+      ]);
+
+      // Update post comment count
+      const post = await ctx.db.get(comment.postId);
+      if (post) {
+        const deletedCount = 1 + replies.length;
+        await ctx.db.patch(comment.postId, {
+          commentCount: Math.max(0, (post.commentCount || 0) - deletedCount),
+        });
+      }
+    } else {
+      // This is a reply, just delete its likes
+      const commentLikes = await ctx.db
+        .query("commentLikes")
+        .withIndex("by_commentId", (q) => q.eq("commentId", args.commentId))
+        .collect();
+
+      await Promise.all(commentLikes.map((like) => ctx.db.delete(like._id)));
+
+      // Update post comment count
+      const post = await ctx.db.get(comment.postId);
+      if (post) {
+        await ctx.db.patch(comment.postId, {
+          commentCount: Math.max(0, (post.commentCount || 0) - 1),
+        });
+      }
+    }
 
     // Delete the main comment
     await ctx.db.delete(args.commentId);
-
-    // Update post comment count
-    const post = await ctx.db.get(comment.postId);
-    if (post) {
-      const deletedCount = 1 + replies.length;
-      await ctx.db.patch(comment.postId, {
-        commentCount: Math.max(0, (post.commentCount || 0) - deletedCount),
-      });
-    }
 
     return true;
   },
