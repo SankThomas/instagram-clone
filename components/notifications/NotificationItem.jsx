@@ -1,12 +1,17 @@
 import { useUser } from "@clerk/nextjs";
-import { Bell, Heart, MessageCircle, UserPlus } from "lucide-react";
+import { Bell, Heart, MessageCircle, Trash2, UserPlus } from "lucide-react";
 import Link from "next/link";
 import { useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { formatDistanceToNow } from "date-fns";
 import Image from "next/image";
+import { Button } from "../ui/button";
 
-export default function NotificationItem({ notification, onMarkAsRead }) {
+export default function NotificationItem({
+  notification,
+  onMarkAsRead,
+  onDelete,
+}) {
   const { user } = useUser();
 
   const getNotificationIcon = (type) => {
@@ -120,6 +125,15 @@ export default function NotificationItem({ notification, onMarkAsRead }) {
             </div>
           </Link>
         )}
+
+        <Button
+          size="sm"
+          variant="primary"
+          className="bg-transparent! hover:text-red-500"
+          onClick={() => onDelete(notification._id)}
+        >
+          <Trash2 className="size-4" />
+        </Button>
 
         {!notification.isRead && (
           <div className="size-2 bg-primary rounded-full shrink-0"></div>
