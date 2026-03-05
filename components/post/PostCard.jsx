@@ -4,7 +4,16 @@ import { api } from "@/convex/_generated/api";
 import { useUser } from "@clerk/nextjs";
 import { useMutation, useQuery } from "convex/react";
 import { formatDistanceToNow } from "date-fns";
-import { Bookmark, Copy, Heart, MessageCircle, MoveHorizontal as MoreHorizontal, Share, Share as ShareIcon, Trash2 } from "lucide-react";
+import {
+  Bookmark,
+  Copy,
+  Heart,
+  MessageCircle,
+  MoreHorizontal,
+  Share,
+  Share as ShareIcon,
+  Trash2,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -104,6 +113,14 @@ export default function PostCard({ post }) {
     }
   };
 
+  const handleShare = () => {
+    // Share functionality
+  };
+
+  const handleCopyLink = () => {
+    // Copy link functionality
+  };
+
   const isOwner = currentUser && post.user._id === currentUser._id;
 
   return (
@@ -163,12 +180,12 @@ export default function PostCard({ post }) {
               </DropdownMenuItem>
             )}
 
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={handleShare}>
               <ShareIcon className="size-4 mr-1" />
               Share
             </DropdownMenuItem>
 
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={handleCopyLink}>
               <Copy className="size-4 mr-1" />
               Copy link
             </DropdownMenuItem>
@@ -286,14 +303,13 @@ export default function PostCard({ post }) {
             </Button>
           )}
         </form>
-      </div>
 
-      {showComments && (
-        <CommentSection
-          postId={post._id}
-          onClose={() => setShowComments(false)}
-        />
-      )}
+        {showComments && (
+          <CommentSection
+            postId={post._id}
+          />
+        )}
+      </div>
     </article>
   );
 }
