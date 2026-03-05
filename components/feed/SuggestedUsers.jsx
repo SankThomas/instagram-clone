@@ -20,7 +20,7 @@ export default function SuggestedUsers() {
   }
 
   return (
-    <div className="bg-card rounded-lg p-4 border">
+    <div className="bg-card rounded-lg p-4 border w-80">
       <h3 className="font-semibold mb-4">Suggested for you</h3>
 
       <div className="space-y-3">
