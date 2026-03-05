@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { UserPlus, UserMinus } from "lucide-react";
 import { toast } from "sonner";
 
-export default function FollowButton({ userId, currentUser }) {
+export default function FollowButton({ userId }) {
   const { user } = useUser();
   const isFollowing = useQuery(
     api.follows.isFollowing,
