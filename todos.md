@@ -14,5 +14,6 @@
 12. In the search page, should be able to search posts using hashtags and other post details as well.
 13. Bug: on the messages page, if I log in with another account, I can all the messages that have been sent on the platform. That should not be the case. Only show messages that the current user is associated with.
 14. Should not be able to send messages if there is no mutual follow.
+15. When I receive a message, on the sidebar, next to the messages link, it should show the number of unread messages, and then on the messages page, it should show the number of unread messages next to each message.
 
 IGNORE THIS TODO ITEM: Build login page to look like instagram login page.
