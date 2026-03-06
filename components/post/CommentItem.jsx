@@ -1,5 +1,5 @@
 import { formatDistanceToNow } from "date-fns";
-import { Heart, Reply, Trash2, Edit } from "lucide-react";
+import { Heart, Reply, Trash2, CreditCard as Edit } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
