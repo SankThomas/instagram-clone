@@ -225,6 +225,33 @@ export const toggleCommentLike = mutation({
   },
 });
 
+export const editComment = mutation({
+  args: {
+    clerkId: v.string(),
+    commentId: v.id("comments"),
+    content: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_clerkId", (q) => q.eq("clerkId", args.clerkId))
+      .first();
+
+    if (!user) throw new Error("User not found");
+
+    const comment = await ctx.db.get(args.commentId);
+    if (!comment) throw new Error("Comment not found");
+    if (comment.userId !== user._id) throw new Error("Not authorized");
+
+    await ctx.db.patch(args.commentId, {
+      content: args.content,
+      updatedAt: Date.now(),
+    });
+
+    return true;
+  },
+});
+
 export const deleteComment = mutation({
   args: {
     clerkId: v.string(),

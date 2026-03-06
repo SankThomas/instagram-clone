@@ -152,6 +152,11 @@ export default function MessagesPage() {
                       </div>
                     ) : conversation.lastMessage.messageType === "post" ? (
                       "📝 Shared a post"
+                    ) : message.messageType === "video" ? (
+                      <div className="flex items-center gap-1">
+                        <div>🎥</div>
+                        Video
+                      </div>
                     ) : (
                       conversation.lastMessage.content
                     )}

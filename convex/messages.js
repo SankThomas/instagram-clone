@@ -121,9 +121,11 @@ export const sendMessage = mutation({
     messageType: v.union(
       v.literal("text"),
       v.literal("image"),
+      v.literal("video"),
       v.literal("post"),
     ),
     imageId: v.optional(v.id("_storage")),
+    videoId: v.optional(v.id("_storage")),
     postId: v.optional(v.id("posts")),
   },
   handler: async (ctx, args) => {
@@ -134,9 +136,12 @@ export const sendMessage = mutation({
 
     if (!user) throw new Error("User not found");
 
-    let imageUrl;
+    let imageUrl, videoUrl;
     if (args.imageId) {
       imageUrl = await ctx.storage.getUrl(args.imageId);
+    }
+    if (args.videoId) {
+      videoUrl = await ctx.storage.getUrl(args.videoId);
     }
 
     const messageId = await ctx.db.insert("messages", {
@@ -146,6 +151,8 @@ export const sendMessage = mutation({
       messageType: args.messageType,
       imageUrl,
       imageId: args.imageId,
+      videoUrl,
+      videoId: args.videoId,
       postId: args.postId,
       isRead: false,
       createdAt: Date.now(),

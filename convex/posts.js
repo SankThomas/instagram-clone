@@ -404,6 +404,89 @@ export const getSavedPosts = query({
   },
 });
 
+export const searchPosts = query({
+  args: {
+    query: v.string(),
+    clerkId: v.optional(v.string()),
+    paginationOpts: paginationOptsValidator,
+  },
+  handler: async (ctx, args) => {
+    let currentUser = null;
+    if (args.clerkId) {
+      currentUser = await ctx.db
+        .query("users")
+        .withIndex("by_clerkId", (q) => q.eq("clerkId", args.clerkId))
+        .first();
+    }
+
+    const searchQuery = args.query.toLowerCase();
+    const allPosts = await ctx.db
+      .query("posts")
+      .withIndex("by_createdAt")
+      .order("desc")
+      .collect();
+
+    // Filter posts by caption, hashtags, or location
+    const filteredPosts = allPosts.filter((post) => {
+      const caption = post.caption?.toLowerCase() || "";
+      const hashtags = post.hashtags?.join(" ").toLowerCase() || "";
+      const location = post.location?.toLowerCase() || "";
+      
+      return (
+        caption.includes(searchQuery) ||
+        hashtags.includes(searchQuery) ||
+        location.includes(searchQuery) ||
+        (searchQuery.startsWith("#") && hashtags.includes(searchQuery.slice(1)))
+      );
+    });
+
+    // Paginate the filtered results
+    const startIndex = args.paginationOpts.cursor
+      ? parseInt(args.paginationOpts.cursor)
+      : 0;
+    const endIndex = startIndex + args.paginationOpts.numItems;
+    const paginatedPosts = filteredPosts.slice(startIndex, endIndex);
+
+    const postsWithUserData = await Promise.all(
+      paginatedPosts.map(async (post) => {
+        const user = await ctx.db.get(post.userId);
+        const isLiked = currentUser
+          ? (await ctx.db
+              .query("likes")
+              .withIndex("by_userId_postId", (q) =>
+                q.eq("userId", currentUser._id).eq("postId", post._id),
+              )
+              .first()) !== null
+          : false;
+        const isSaved = currentUser
+          ? (await ctx.db
+              .query("savedPosts")
+              .withIndex("by_userId_postId", (q) =>
+                q.eq("userId", currentUser._id).eq("postId", post._id),
+              )
+              .first()) !== null
+          : false;
+
+        return {
+          ...post,
+          user,
+          isLiked,
+          isSaved,
+          likeCount: post.likeCount || 0,
+          commentCount: post.commentCount || 0,
+        };
+      }),
+    );
+
+    return {
+      page: postsWithUserData,
+      isDone: endIndex >= filteredPosts.length,
+      continueCursor:
+        endIndex >= filteredPosts.length ? null : endIndex.toString(),
+    };
+  },
+});
+
 export const createPost = mutation({
   args: {
     clerkId: v.string(),

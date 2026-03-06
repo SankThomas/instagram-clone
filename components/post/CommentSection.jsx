@@ -36,6 +36,7 @@ export default function CommentSection({
   const toggleCommentLike = useMutation(api.comments.toggleCommentLike);
   const addComment = useMutation(api.comments.addComment);
   const deleteComment = useMutation(api.comments.deleteComment);
+  const editComment = useMutation(api.comments.editComment);
 
   const handleLike = async (commentId) => {
     if (!user) return;
@@ -79,6 +80,16 @@ export default function CommentSection({
     }
   };
 
+  const handleEdit = async (commentId, content) => {
+    if (!user) return;
+    try {
+      await editComment({ clerkId: user.id, commentId, content });
+      toast.success("Comment updated");
+    } catch (error) {
+      toast.error("Failed to update comment");
+    }
+  };
+
   if (status === "LoadingFirstPage") {
     return (
       <div className="border-t border-border p-4">
@@ -109,6 +120,7 @@ export default function CommentSection({
               onLike={() => handleLike(comment._id)}
               onReply={() => setReplyingTo(comment._id)}
               onDelete={() => handleDelete(comment._id)}
+              onEdit={handleEdit}
             />
           ))}
 

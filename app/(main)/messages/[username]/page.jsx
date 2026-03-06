@@ -13,11 +13,13 @@ import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
 import { toast } from "sonner";
 import Image from "next/image";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 export default function ChatPage() {
   const { username } = useParams();
   const [messageText, setMessageText] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
 
@@ -101,28 +103,32 @@ export default function ChatPage() {
     const file = e.target.files?.[0];
     if (!file || !otherUser || !user) return;
 
-    if (!file.type.startsWith("image/")) {
-      toast.error("Please select an image file");
+    if (!file.type.startsWith("image/") && !file.type.startsWith("video/")) {
+      toast.error("Please select an image or video file");
       return;
     }
 
-    if (file.size > 10 * 1024 * 1024) {
-      toast.error("Image size must be less than 10MB");
+    if (file.size > 50 * 1024 * 1024) {
+      toast.error("File size must be less than 50MB");
       return;
     }
 
     try {
-      const imageId = await uploadFile(file);
+      const fileId = await uploadFile(file);
+      const messageType = file.type.startsWith("video/") ? "video" : "image";
+      const content = file.type.startsWith("video/") ? "🎥 Video" : "📷 Photo";
+      
       await sendMessage({
         clerkId: user.id,
         receiverId: otherUser._id,
-        content: "📷 Photo",
-        messageType: "image",
-        imageId,
+        content,
+        messageType,
+        imageId: messageType === "image" ? fileId : undefined,
+        videoId: messageType === "video" ? fileId : undefined,
       });
-      toast.success("Image sent!");
+      toast.success(`${messageType === "video" ? "Video" : "Image"} sent!`);
     } catch (error) {
-      toast.error("Failed to send image");
+      toast.error(`Failed to send ${messageType === "video" ? "video" : "image"}`);
     }
   };
 
@@ -220,12 +226,23 @@ export default function ChatPage() {
                       className={`inline-block p-3 rounded-2xl ${isOwn ? "bg-primary text-primary-foreground" : "bg-secondary"}`}
                     >
                       {message.messageType === "image" ? (
-                        <div className="relative size-48">
+                        <div 
+                          className="relative size-48 cursor-pointer"
+                          onClick={() => setSelectedImage(message.imageUrl)}
+                        >
                           <Image
                             src={message.imageUrl}
                             alt="Shared image"
                             fill
                             className="object-cover rounded-lg"
+                          />
+                        </div>
+                      ) : message.messageType === "video" ? (
+                        <div className="relative size-48">
+                          <video
+                            src={message.videoUrl}
+                            controls
+                            className="w-full h-full object-cover rounded-lg"
                           />
                         </div>
                       ) : (
@@ -277,12 +294,28 @@ export default function ChatPage() {
           <input
             ref={fileInputRef}
             type="file"
-            accept="image/*"
+            accept="image/*,video/*"
             onChange={handleImageUpload}
             className="hidden"
           />
         </div>
       </form>
+
+      {/* Image Modal */}
+      <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
+        <DialogContent className="max-w-4xl">
+          {selectedImage && (
+            <div className="relative w-full h-[70vh]">
+              <Image
+                src={selectedImage}
+                alt="Shared image"
+                fill
+                className="object-contain"
+              />
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

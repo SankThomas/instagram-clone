@@ -55,10 +55,13 @@ export default defineSchema({
     messageType: v.union(
       v.literal("text"),
       v.literal("image"),
+      v.literal("video"),
       v.literal("post"),
     ),
     imageUrl: v.optional(v.string()),
     imageId: v.optional(v.id("_storage")),
+    videoUrl: v.optional(v.string()),
+    videoId: v.optional(v.id("_storage")),
     postId: v.optional(v.id("posts")),
     isRead: v.optional(v.boolean()),
     createdAt: v.number(),

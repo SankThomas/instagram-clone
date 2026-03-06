@@ -1,9 +1,10 @@
 import { formatDistanceToNow } from "date-fns";
-import { Heart, Reply, Trash2 } from "lucide-react";
+import { Heart, Reply, Trash2, Edit } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
+import { Input } from "../ui/input";
 import CommentReplies from "./CommentReplies";
 
 export default function CommentItem({
@@ -12,10 +13,24 @@ export default function CommentItem({
   onLike,
   onReply,
   onDelete,
+  onEdit,
   isReply = false,
 }) {
   const [showReplies, setShowReplies] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editText, setEditText] = useState(comment.content);
   const isOwner = currentUser && comment.user._id === currentUser._id;
+
+  const handleEdit = async () => {
+    if (!editText.trim()) return;
+    await onEdit(comment._id, editText.trim());
+    setIsEditing(false);
+  };
+
+  const handleCancelEdit = () => {
+    setEditText(comment.content);
+    setIsEditing(false);
+  };
 
   return (
     <div className="flex gap-3 group">
@@ -37,7 +52,26 @@ export default function CommentItem({
           >
             {comment.user.displayName || comment.user.username}
           </Link>
-          <div className="text-sm mt-1 wrap-break-word">{comment.content}</div>
+          {isEditing ? (
+            <div className="mt-2 space-y-2">
+              <Input
+                value={editText}
+                onChange={(e) => setEditText(e.target.value)}
+                className="text-sm"
+                autoFocus
+              />
+              <div className="flex gap-2">
+                <Button size="xs" onClick={handleEdit}>
+                  Save
+                </Button>
+                <Button size="xs" variant="outline" onClick={handleCancelEdit}>
+                  Cancel
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <div className="text-sm mt-1 wrap-break-word">{comment.content}</div>
+          )}
         </div>
 
         <div className="flex items-center gap-4 mt-2 text-xs text-text-secondary">
@@ -70,14 +104,24 @@ export default function CommentItem({
           </Button>
 
           {isOwner && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onDelete}
-              className="h-auto p-0 text-xs text-destructive hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
-            >
-              <Trash2 className="size-3" />
-            </Button>
+            <>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsEditing(true)}
+                className="h-auto p-0 text-xs text-text-secondary hover:text-text opacity-0 group-hover:opacity-100 transition-opacity"
+              >
+                <Edit className="size-3" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onDelete}
+                className="h-auto p-0 text-xs text-destructive hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
+              >
+                <Trash2 className="size-3" />
+              </Button>
+            </>
           )}
         </div>
 

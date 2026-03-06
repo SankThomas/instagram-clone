@@ -14,9 +14,13 @@ import FollowButton from "./FollowButton";
 import EditProfileModal from "./EditProfileModal";
 import { ProfileSkeleton } from "../ui/LoadingSkeleton";
 import SavedPosts from "./SavedPosts";
+import FollowersModal from "./FollowersModal";
+import FollowingModal from "./FollowingModal";
 
 export default function ProfilePage({ username }) {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [showFollowers, setShowFollowers] = useState(false);
+  const [showFollowing, setShowFollowing] = useState(false);
   const { user: clerkUser } = useUser();
   const user = useQuery(api.users.getUserByUsername, { username });
   const currentUser = useQuery(
@@ -95,13 +99,19 @@ export default function ProfilePage({ username }) {
                 </div>
                 <div className="text-text-secondary">posts</div>
               </div>
-              <div className="text-center cursor-pointer">
+              <div 
+                className="text-center cursor-pointer hover:opacity-80 transition-opacity"
+                onClick={() => setShowFollowers(true)}
+              >
                 <div className="font-semibold text-lg">
                   {userStats?.followerCount || 0}
                 </div>
                 <div className="text-text-secondary">followers</div>
               </div>
-              <div className="text-center cursor-pointer">
+              <div 
+                className="text-center cursor-pointer hover:opacity-80 transition-opacity"
+                onClick={() => setShowFollowing(true)}
+              >
                 <div className="font-semibold text-lg">
                   {userStats?.followingCount || 0}
                 </div>
@@ -180,6 +190,22 @@ export default function ProfilePage({ username }) {
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
         user={user}
+      />
+
+      {/* Followers Modal */}
+      <FollowersModal
+        isOpen={showFollowers}
+        onClose={() => setShowFollowers(false)}
+        userId={user?._id}
+        title="Followers"
+      />
+
+      {/* Following Modal */}
+      <FollowingModal
+        isOpen={showFollowing}
+        onClose={() => setShowFollowing(false)}
+        userId={user?._id}
+        title="Following"
       />
     </div>
   );
