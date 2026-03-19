@@ -94,9 +94,7 @@ export default function ReelsPage() {
             </div>
           </div>
           <h3 className="text-xl font-semibold mb-2">No reels yet</h3>
-          <p className="text-text-secondary">
-            Video posts will appear here as reels.
-          </p>
+          <p className="text-primary">Video posts will appear here as reels.</p>
         </div>
       </div>
     );

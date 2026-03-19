@@ -138,7 +138,7 @@ export default function ChatPage() {
     return (
       <div className="text-center py-12">
         <h2 className="text-xl font-semibold mb-2">User not found</h2>
-        <p className="text-text-secondary">
+        <p className="text-primary">
           The user you are trying to message does not exist.
         </p>
       </div>
@@ -170,9 +170,7 @@ export default function ChatPage() {
             <div className="font-semibold">
               {otherUser.displayName || otherUser.username}
             </div>
-            <div className="text-sm text-text-secondary">
-              @{otherUser.username}
-            </div>
+            <div className="text-sm text-primary">@{otherUser.username}</div>
           </div>
         </Link>
       </div>

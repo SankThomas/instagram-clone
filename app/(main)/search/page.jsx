@@ -29,7 +29,7 @@ export default function SearchPage() {
   } = usePaginatedQuery(
     api.posts.searchPosts,
     debouncedQuery.length > 0 ? { query: debouncedQuery } : "skip",
-    { initialNumItems: 21 }
+    { initialNumItems: 21 },
   );
 
   return (
@@ -37,7 +37,7 @@ export default function SearchPage() {
       <div className="sticky top-0 bg-background pb-4 border-b border-border">
         <h1 className="text-2xl font-bold mb-4">Search</h1>
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 size-4 text-text-secondary" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 size-4 text-primary" />
           <Input
             placeholder="Search users..."
             value={searchQuery}
@@ -52,8 +52,10 @@ export default function SearchPage() {
           <div className="size-24 mx-auto mb-6 bg-secondary rounded-full flex items-center justify-center">
             <Users className="size-12 text-muted-foreground" />
           </div>
-          <h3 className="text-xl font-semibold mb-2">Search for people and posts</h3>
-          <p className="text-text-secondary">
+          <h3 className="text-xl font-semibold mb-2">
+            Search for people and posts
+          </h3>
+          <p className="text-primary">
             Find friends, discover new accounts, and search posts by hashtags
           </p>
         </div>
@@ -77,7 +79,7 @@ export default function SearchPage() {
                   <div className="size-24 mx-auto mb-6 bg-secondary rounded-full flex items-center justify-center">
                     <Users className="size-12 text-muted-foreground" />
                   </div>
-                  <p className="text-text-secondary">
+                  <p className="text-primary">
                     No users found for &apos;{searchQuery}&apos;
                   </p>
                 </div>
@@ -104,7 +106,7 @@ export default function SearchPage() {
                 <div className="size-24 mx-auto mb-6 bg-secondary rounded-full flex items-center justify-center">
                   <Search className="size-12 text-muted-foreground" />
                 </div>
-                <p className="text-text-secondary">
+                <p className="text-primary">
                   No posts found for &apos;{searchQuery}&apos;
                 </p>
               </div>
@@ -127,7 +129,9 @@ export default function SearchPage() {
                         />
                       ) : (
                         <Image
-                          src={post.imageUrls ? post.imageUrls[0] : post.imageUrl}
+                          src={
+                            post.imageUrls ? post.imageUrls[0] : post.imageUrl
+                          }
                           alt={post.caption || "Post image"}
                           fill
                           className="object-contain"
@@ -138,7 +142,9 @@ export default function SearchPage() {
                       <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded flex items-center justify-center">
                         <div className="flex items-center gap-4 text-white">
                           <div className="flex items-center gap-1">
-                            <span className="font-semibold">{post.likeCount || 0}</span>
+                            <span className="font-semibold">
+                              {post.likeCount || 0}
+                            </span>
                           </div>
                           <div className="flex items-center gap-1">
                             <span className="font-semibold">

@@ -81,7 +81,7 @@ export default function NotificationsPage() {
           <Bell className="size-12 text-muted-foreground" />
         </div>
         <h3 className="text-xl font-semibold mb-2">No notifications yet</h3>
-        <p className="text-text-secondary">
+        <p className="text-primary">
           When someone likes your posts or follows you, you will see it here.
         </p>
       </div>

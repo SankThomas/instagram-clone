@@ -56,9 +56,7 @@ export default function HashtagPage() {
           <h1 className="text-3xl font-bold mb-2">
             #{decodeURIComponent(tag)}
           </h1>
-          <p className="text-text-secondary">
-            No posts found with this hashtag
-          </p>
+          <p className="text-primary">No posts found with this hashtag</p>
         </div>
       </div>
     );
@@ -74,7 +72,7 @@ export default function HashtagPage() {
           <h1 className="text-3xl font-bold mb-2">
             #{decodeURIComponent(tag)}
           </h1>
-          <p className="text-text-secondary">
+          <p className="text-primary">
             {posts.length} {posts.length === 1 ? "post" : "posts"}
           </p>
         </div>

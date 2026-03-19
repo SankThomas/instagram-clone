@@ -13,17 +13,13 @@ export default function LoginPage() {
             <Instagram className="size-8 text-white" />
           </div>
           <h1 className="text-2xl font-bold mb-2">Welcome back</h1>
-          <p className="text-text-secondary">
-            Sign in to your account to continue
-          </p>
+          <p className="text-primary">Sign in to your account to continue</p>
         </div>
 
         <SignIn />
 
         <div className="text-center text-sm">
-          <span className="text-text-secondary">
-            Don&apos;t have an account?{" "}
-          </span>
+          <span className="text-primary">Don&apos;t have an account? </span>
           <Link href="/register" className="text-primary hover:underline">
             Sign up
           </Link>

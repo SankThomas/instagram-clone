@@ -49,7 +49,7 @@ export default function ExplorePage() {
             </div>
           </div>
           <h3 className="text-xl font-semibold mb-2">No posts to explore</h3>
-          <p className="text-text-secondary">
+          <p className="text-primary">
             Check back later for new content to discover.
           </p>
         </div>

@@ -21,7 +21,7 @@ export default function PostPage() {
     return (
       <div className="text-center py-12">
         <h2 className="text-xl font-semibold mb-2">Post not found</h2>
-        <p className="text-text-secondary">
+        <p className="text-primary">
           The post you are looking for does not exist.
         </p>
       </div>

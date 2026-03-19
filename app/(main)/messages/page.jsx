@@ -68,7 +68,7 @@ export default function MessagesPage() {
             </div>
           </div>
           <h3 className="text-xl font-semibold mb-2">Your messages</h3>
-          <p className="text-text-secondary mb-6">
+          <p className="text-primary mb-6">
             Send private photos and messages to a friend or group.
           </p>
           <Link href="/messages/new">
@@ -104,7 +104,7 @@ export default function MessagesPage() {
 
       {/* Search */}
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 size-4 text-text-secondary" />
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 size-4 text-primary" />
         <Input
           placeholder="Search conversations..."
           value={searchQuery}
@@ -151,7 +151,7 @@ export default function MessagesPage() {
                     conversation.otherParticipant?.username}
                 </div>
                 {conversation.lastMessage && (
-                  <div className="text-sm text-text-secondary truncate">
+                  <div className="text-sm text-primary truncate">
                     {conversation.lastMessage.messageType === "image" ? (
                       <div className="flex items-center gap-1">
                         <ImageIcon className="size-4" />
@@ -179,7 +179,7 @@ export default function MessagesPage() {
               </div>
 
               {conversation.lastMessage && (
-                <div className="text-xs text-text-secondary">
+                <div className="text-xs text-primary">
                   {formatDistanceToNow(
                     new Date(conversation.lastMessage.createdAt),
                     {

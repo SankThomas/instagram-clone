@@ -81,7 +81,7 @@ export default function SettingsPage() {
                     <Badge variant="secondary">Verified</Badge>
                   )}
                 </div>
-                <div className="text-text-secondary text-sm mb-2">
+                <div className="text-primary text-sm mb-2">
                   @{currentUser.username}
                 </div>
                 <div className="flex gap-4 text-sm">
