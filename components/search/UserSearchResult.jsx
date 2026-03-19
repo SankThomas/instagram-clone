@@ -20,17 +20,13 @@ export default function UserSearchResult({ user }) {
           <div className="font-semibold truncate">
             {user.displayName || user.username}
           </div>
-          <div className="text-sm text-text-secondary truncate">
-            @{user.username}
-          </div>
+          <div className="text-sm text-primary truncate">@{user.username}</div>
           {user.bio && (
-            <div className="text-sm text-text-secondary truncate mt-1">
-              {user.bio}
-            </div>
+            <div className="text-sm text-primary truncate mt-1">{user.bio}</div>
           )}
         </div>
       </Link>
-      <div className="text-sm text-text-secondary">
+      <div className="text-sm text-primary">
         {user.followerCount || 0}{" "}
         {user.followerCount === 1 ? "follower" : "followers"}
       </div>
