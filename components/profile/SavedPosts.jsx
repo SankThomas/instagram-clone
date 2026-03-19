@@ -44,7 +44,7 @@ export default function SavedPosts() {
           </div>
         </div>
         <h3 className="text-xl font-semibold mb-2">No saved posts yet</h3>
-        <p className="text-text-secondary">
+        <p className="text-primary">
           When you save posts, they will appear here.
         </p>
       </div>
