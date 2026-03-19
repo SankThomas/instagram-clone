@@ -66,7 +66,7 @@ export default function CommentReplies({ commentId, onClose }) {
   }
 
   return (
-    <div className="ml-8 space-y-3">
+    <div className="ml-8 mt-4 space-y-3">
       {replies?.map((reply) => (
         <CommentItem
           key={reply._id}
