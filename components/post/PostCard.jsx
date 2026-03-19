@@ -6,6 +6,8 @@ import { useMutation, useQuery } from "convex/react";
 import { formatDistanceToNow } from "date-fns";
 import {
   Bookmark,
+  ChevronLeft,
+  ChevronRight,
   Copy,
   Heart,
   MessageCircle,
@@ -34,6 +36,7 @@ export default function PostCard({ post }) {
   const [showComments, setShowComments] = useState(false);
   const [commentText, setCommentText] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [currentSlide, setCurrentSlide] = useState(0);
 
   const { user } = useUser();
 
@@ -117,6 +120,18 @@ export default function PostCard({ post }) {
 
   const handleCopyLink = () => {};
 
+  const nextSlide = () => {
+    setCurrentSlide((prev) =>
+      prev === post.imageUrls.length - 1 ? 0 : prev + 1,
+    );
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) =>
+      prev === 0 ? post.imageUrls.length - 1 : prev - 1,
+    );
+  };
+
   const isOwner = currentUser && post.user._id === currentUser._id;
 
   return (
@@ -190,7 +205,61 @@ export default function PostCard({ post }) {
       </div>
 
       <div className="relative w-full aspect-square bg-black">
-        {post.mediaType === "video" && post.videoUrl ? (
+        {post.mediaType === "carousel" ? (
+          <div className="relative w-full h-full">
+            {post.imageUrls.map((url, index) => (
+              <div
+                key={index}
+                className={`absolute inset-0 transition-opacity duration-300 ${
+                  index === currentSlide ? "opacity-100" : "opacity-0"
+                }`}
+              >
+                <Image
+                  src={url}
+                  alt={`Post image ${index + 1}`}
+                  fill
+                  className="object-contain"
+                  sizes="(max-width: 640px) 100vw, 640px"
+                  priority={index === 0}
+                />
+              </div>
+            ))}
+
+            {/* Buttons */}
+            {post.imageUrls.length > 1 && (
+              <>
+                <button
+                  onClick={prevSlide}
+                  className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 text-white px-2 py-1 rounded"
+                >
+                  <ChevronLeft className="size-4" />
+                </button>
+
+                <button
+                  onClick={nextSlide}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 text-white px-2 py-1 rounded"
+                >
+                  <ChevronRight className="size-4" />
+                </button>
+              </>
+            )}
+
+            {/* Dots */}
+            {post.imageUrls.length > 1 && (
+              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1">
+                {post.imageUrls.map((_, index) => (
+                  <div
+                    key={index}
+                    onClick={() => setCurrentSlide(index)}
+                    className={`size-2 cursor-pointer rounded-full ${
+                      index === currentSlide ? "bg-white" : "bg-white/40"
+                    }`}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        ) : post.mediaType === "video" && post.videoUrl ? (
           <video
             src={post?.videoUrl}
             controls
@@ -233,7 +302,7 @@ export default function PostCard({ post }) {
               <MessageCircle className="size-6" />
             </Button>
 
-            <Button variant="ghost" size="sm">
+            <Button variant="ghost" size="sm" onClick={handleShare}>
               <Share className="size-6" />
             </Button>
           </div>
@@ -288,7 +357,7 @@ export default function PostCard({ post }) {
             variant="ghost"
             size="sm"
             onClick={() => setShowComments(true)}
-            className="text-text-secondary hover:text-text p-0 h-auto font-normal"
+            className="text-primary hover:text-text p-0 h-auto font-normal"
           >
             View all {post.commentCount} comments
           </Button>
