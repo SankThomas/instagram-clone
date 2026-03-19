@@ -115,7 +115,7 @@ export default function CommentItem({
                 variant="ghost"
                 size="sm"
                 onClick={() => setIsEditing(true)}
-                className="h-auto p-0 text-xs text-secondary hover:text-text opacity-0 group-hover:opacity-100 transition-opacity"
+                className="h-auto p-0 text-xs text-primary/80 hover:text-primary opacity-0 group-hover:opacity-100 transition-opacity"
               >
                 <Pencil className="size-3" />
               </Button>
@@ -136,7 +136,7 @@ export default function CommentItem({
             variant="ghost"
             size="sm"
             onClick={() => setShowReplies(!showReplies)}
-            className="h-auto p-0 text-xs text-primary hover:text-text mt-2"
+            className="h-auto p-0 text-xs text-primary/80 hover:text-primary mt-2"
           >
             {showReplies ? "Hide" : "View"} {comment.repliesCount}{" "}
             {comment.repliesCount === 1 ? "reply" : "replies"}
