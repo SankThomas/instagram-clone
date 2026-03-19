@@ -1,16 +1,14 @@
 "use client";
 
 import { api } from "@/convex/_generated/api";
-import { useUser } from "@clerk/nextjs";
 import { usePaginatedQuery } from "convex/react";
 import { Heart, MessageCircle, User } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import PostModal from "./PostModal";
 
-export default function ProfilePosts({ userId, isOwnProfile }) {
+export default function ProfilePosts({ user, userId, isOwnProfile }) {
   const [selectedPost, setSelectedPost] = useState(null);
-  const { user } = useUser();
 
   const {
     results: posts,
@@ -50,9 +48,7 @@ export default function ProfilePosts({ userId, isOwnProfile }) {
             <h2 className="text-xl font-semibold">
               {profileUser.displayName || profileUser.username}
             </h2>
-            <p className="text-sm text-text-secondary">
-              @{profileUser.username}
-            </p>
+            <p className="text-sm text-primary">@{profileUser.username}</p>
           </div>
         </div>
       )}
@@ -63,7 +59,7 @@ export default function ProfilePosts({ userId, isOwnProfile }) {
             <User className="size-12 text-muted-foreground" />
           </div>
           <h3 className="text-xl font-semibold mb-2">No posts yet</h3>
-          <p className="text-text-secondary">
+          <p className="text-primary">
             {isOwnProfile
               ? "When you share photos and videos, they will appear on your profile."
               : "This user does not have any posts yet."}
@@ -129,7 +125,11 @@ export default function ProfilePosts({ userId, isOwnProfile }) {
       )}
 
       {selectedPost && (
-        <PostModal post={selectedPost} onClose={() => setSelectedPost(null)} />
+        <PostModal
+          user={user}
+          post={selectedPost}
+          onClose={() => setSelectedPost(null)}
+        />
       )}
     </>
   );
