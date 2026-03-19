@@ -194,7 +194,6 @@ export default function PostCard({ post }) {
           <video
             src={post?.videoUrl}
             controls
-            autoPlay
             loop
             poster={post.thumbnailUrl}
             className="w-full h-full object-contain"
