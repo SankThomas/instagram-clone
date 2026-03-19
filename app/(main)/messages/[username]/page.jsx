@@ -13,7 +13,7 @@ import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
 import { toast } from "sonner";
 import Image from "next/image";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
 export default function ChatPage() {
   const { username } = useParams();
@@ -117,7 +117,7 @@ export default function ChatPage() {
       const fileId = await uploadFile(file);
       const messageType = file.type.startsWith("video/") ? "video" : "image";
       const content = file.type.startsWith("video/") ? "🎥 Video" : "📷 Photo";
-      
+
       await sendMessage({
         clerkId: user.id,
         receiverId: otherUser._id,
@@ -128,7 +128,9 @@ export default function ChatPage() {
       });
       toast.success(`${messageType === "video" ? "Video" : "Image"} sent!`);
     } catch (error) {
-      toast.error(`Failed to send ${messageType === "video" ? "video" : "image"}`);
+      toast.error(
+        `Failed to send ${messageType === "video" ? "video" : "image"}`,
+      );
     }
   };
 
@@ -226,7 +228,7 @@ export default function ChatPage() {
                       className={`inline-block p-3 rounded-2xl ${isOwn ? "bg-primary text-primary-foreground" : "bg-secondary"}`}
                     >
                       {message.messageType === "image" ? (
-                        <div 
+                        <div
                           className="relative size-48 cursor-pointer"
                           onClick={() => setSelectedImage(message.imageUrl)}
                         >
@@ -302,8 +304,12 @@ export default function ChatPage() {
       </form>
 
       {/* Image Modal */}
-      <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
-        <DialogContent className="max-w-4xl">
+      <Dialog
+        open={!!selectedImage}
+        onOpenChange={() => setSelectedImage(null)}
+      >
+        <DialogTitle></DialogTitle>
+        <DialogContent className="max-w-4xl!">
           {selectedImage && (
             <div className="relative w-full h-[70vh]">
               <Image
