@@ -1,15 +1,16 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
-import { useQuery } from "convex/react";
-import { useUser } from "@clerk/nextjs";
-import { api } from "@/convex/_generated/api";
+import CreatePostModal from "@/components/post/CreatePostModal";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Instagram, Search, Bell, Plus, Menu, X } from "lucide-react";
-import CreatePostModal from "@/components/post/CreatePostModal";
+import { api } from "@/convex/_generated/api";
+import { useUser } from "@clerk/nextjs";
+import { useQuery } from "convex/react";
+import { Bell, Instagram, Menu, Plus, Search, X } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 export default function Navigation() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -28,7 +29,7 @@ export default function Navigation() {
   return (
     <>
       <nav className="fixed top-0 left-0 right-0 bg-background border-b border-border z-50 lg:hidden">
-        <div className="container flex items-center justify-between h-16">
+        <div className="px-4 flex items-center justify-between h-16">
           <div className="flex items-center gap-4">
             <Button
               variant="ghost"
@@ -51,16 +52,6 @@ export default function Navigation() {
           </div>
 
           <div className="flex items-center gap-2">
-            {!isSearchOpen && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setIsSearchOpen(true)}
-              >
-                <Search className="size-5" />
-              </Button>
-            )}
-
             <Button
               variant="ghost"
               size="sm"
@@ -82,13 +73,28 @@ export default function Navigation() {
                 )}
               </Button>
             </Link>
+
+            {currentUser && (
+              <Link href={`/profile/${currentUser.username}`}>
+                <Avatar className="size-10">
+                  <AvatarImage
+                    src={currentUser.profilePictureUrl}
+                    className="object-cover"
+                  />
+                  <AvatarFallback>
+                    {currentUser.displayName?.[0]?.toUpperCase() ||
+                      currentUser.username?.[0]?.toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+              </Link>
+            )}
           </div>
         </div>
 
         {isSearchOpen && (
           <div className="border-t border-border p-4">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 size-4 text-text-secondary" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 size-4 text-primary" />
               <Input
                 placeholder="Search users..."
                 className="pl-10 pr-10"
