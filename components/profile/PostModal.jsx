@@ -22,7 +22,7 @@ import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogTitle } from "../ui/dialog";
 import { Input } from "../ui/input";
 
-export default function PostModal({ post, onClose }) {
+export default function PostModal({ user: profileUser, post, onClose }) {
   const [commentText, setCommentText] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -80,7 +80,7 @@ export default function PostModal({ post, onClose }) {
       <DialogContent className="max-w-6xl! max-h-[90vh]! h-full p-0 overflow-auto">
         <div className="grid md:grid-cols-2 h-full">
           {/* Image */}
-          <div className="relative w-full aspect-square bg-black">
+          <div className="relative size-full bg-black">
             {post.mediaType === "video" && post.videoUrl ? (
               <video
                 src={post?.videoUrl}
@@ -88,7 +88,7 @@ export default function PostModal({ post, onClose }) {
                 autoPlay
                 loop
                 poster={post.thumbnailUrl}
-                className="w-full h-full object-contain"
+                className="size-full object-contain"
                 preload="metadata"
               />
             ) : (
@@ -106,34 +106,42 @@ export default function PostModal({ post, onClose }) {
           {/* Post Details */}
           <div className="flex flex-col max-h-[90vh]">
             {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b">
+            <div className="p-4 border-b">
               <Link
-                href={`/profile/${post.user?.username}`}
+                href={`/profile/${profileUser?.username || post.user?.username}`}
                 className="flex items-center gap-3"
               >
                 <Avatar className="size-8">
-                  <AvatarImage src={post.user?.profilePictureUrl} />
+                  <AvatarImage
+                    src={
+                      profileUser?.profilePictureUrl ||
+                      post.user?.profilePictureUrl
+                    }
+                  />
                   <AvatarFallback>
-                    {post.user?.displayName?.[0]?.toUpperCase() ||
-                      post.user?.username?.[0]?.toUpperCase()}
+                    {profileUser?.displayName?.[0]?.toUpperCase() ||
+                      profileUser?.username?.[0]?.toUpperCase() ||
+                      post.user?.displayName?.[0].toUpperCase() ||
+                      post.user?.username?.[0].toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="font-semibold text-sm">
-                      {post.user?.displayName || post.user?.username}
+                      {profileUser?.displayName ||
+                        profileUser?.username ||
+                        post.user?.displayName ||
+                        post.user?.username}
                     </span>
-                    {post.user?.isVerified && (
-                      <Badge variant="secondary" className="text-xs">
-                        Verified
-                      </Badge>
-                    )}
+                    {profileUser?.isVerified ||
+                      (post.user?.isVerified && (
+                        <Badge variant="secondary" className="text-xs">
+                          Verified
+                        </Badge>
+                      ))}
                   </div>
                 </div>
               </Link>
-              <Button variant="ghost" size="sm">
-                <MoreHorizontal className="size-4" />
-              </Button>
             </div>
 
             {/* Caption */}
@@ -141,15 +149,22 @@ export default function PostModal({ post, onClose }) {
               <div className="p-4 border-b">
                 <div className="flex gap-3">
                   <Avatar className="size-8">
-                    <AvatarImage src={post.user?.profilePictureUrl} />
+                    <AvatarImage
+                      src={
+                        profileUser?.profilePictureUrl ||
+                        post.user?.profilePictureUrl
+                      }
+                    />
                     <AvatarFallback>
-                      {post.user?.displayName?.[0]?.toUpperCase() ||
-                        post.user?.username?.[0]?.toUpperCase()}
+                      {profileUser?.displayName?.[0]?.toUpperCase() ||
+                        profileUser?.username?.[0]?.toUpperCase() ||
+                        post.user?.displayName?.[0].toUpperCase() ||
+                        post.user?.username?.[0].toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex-1">
                     <span className="font-semibold text-sm mr-2">
-                      {post.user?.username}
+                      {profileUser?.username || post.user?.username}
                     </span>
                     <span className="text-sm">{post.caption}</span>
                     {post.hashtags?.length > 0 && (
@@ -163,7 +178,7 @@ export default function PostModal({ post, onClose }) {
                         ))}
                       </div>
                     )}
-                    <div className="text-xs text-text-secondary mt-2">
+                    <div className="text-xs text-primary mt-2">
                       {formatDistanceToNow(new Date(post.createdAt), {
                         addSuffix: true,
                       })}
