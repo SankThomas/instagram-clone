@@ -1,15 +1,19 @@
-import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Button } from "../ui/button";
+import { usePaginatedQuery } from "convex/react";
 import Link from "next/link";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import FollowButton from "./FollowButton";
 
 export default function FollowingModal({ isOpen, onClose, userId, title }) {
-  const following = useQuery(
+  const {
+    results: following,
+    status,
+    loadMore,
+  } = usePaginatedQuery(
     api.follows.getFollowing,
-    userId ? { userId, paginationOpts: { numItems: 50 } } : "skip"
+    { userId: userId },
+    { initialNumItems: 20 },
   );
 
   return (
@@ -21,10 +25,7 @@ export default function FollowingModal({ isOpen, onClose, userId, title }) {
 
         <div className="space-y-3">
           {following?.page?.map((follow) => (
-            <div
-              key={follow._id}
-              className="flex items-center justify-between"
-            >
+            <div key={follow._id} className="flex items-center justify-between">
               <Link
                 href={`/profile/${follow.user.username}`}
                 className="flex items-center gap-3 flex-1"
