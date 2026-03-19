@@ -1,14 +1,21 @@
 "use client";
 
 import { useState } from "react";
-import { usePaginatedQuery, useMutation } from "convex/react";
+import { usePaginatedQuery } from "convex/react";
 import { useUser } from "@clerk/nextjs";
 import { api } from "@/convex/_generated/api";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { MessageCircle, Send, Search, Image as ImageIcon } from "lucide-react";
+import {
+  MessageCircle,
+  Send,
+  Search,
+  Image as ImageIcon,
+  Video,
+  ClipboardEdit,
+} from "lucide-react";
 import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
 import { toast } from "sonner";
@@ -151,11 +158,18 @@ export default function MessagesPage() {
                         Photo
                       </div>
                     ) : conversation.lastMessage.messageType === "post" ? (
-                      "📝 Shared a post"
-                    ) : message.messageType === "video" ? (
                       <div className="flex items-center gap-1">
-                        <div>🎥</div>
-                        Video
+                        <div>
+                          <ClipboardEdit className="size-4" />
+                        </div>
+                        Shared a post
+                      </div>
+                    ) : conversation.lastMessage.messageType === "video" ? (
+                      <div className="flex items-center gap-1">
+                        <div>
+                          <Video className="size-4" />
+                        </div>
+                        Shared a video
                       </div>
                     ) : (
                       conversation.lastMessage.content
