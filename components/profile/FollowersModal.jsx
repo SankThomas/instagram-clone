@@ -14,13 +14,13 @@ export default function FollowersModal({ isOpen, onClose, userId, title }) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-md max-h-[70vh] overflow-y-auto">
+      <DialogContent className="max-w-md max-h-[50vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-3">
-          {followers?.page?.map((follow) => (
+          {followers?.map((follow) => (
             <div key={follow._id} className="flex items-center justify-between">
               <Link
                 href={`/profile/${follow.user.username}`}
