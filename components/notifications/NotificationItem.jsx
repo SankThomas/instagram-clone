@@ -23,7 +23,7 @@ export default function NotificationItem({
       case "follow":
         return <UserPlus className="size-4 text-success" />;
       default:
-        return <Bell className="size-4 text-text-secondary" />;
+        return <Bell className="size-4 text-primary" />;
     }
   };
 
