@@ -40,7 +40,7 @@ export default function ProfilePage({ username }) {
     return (
       <div className="text-center py-12">
         <h2 className="text-xl font-semibold mb-2">User not found</h2>
-        <p className="text-text-secondary">
+        <p className="text-primary">
           The profile you are looking for does not exist.
         </p>
       </div>
@@ -97,25 +97,25 @@ export default function ProfilePage({ username }) {
                 <div className="font-semibold text-lg">
                   {userStats?.postCount || 0}
                 </div>
-                <div className="text-text-secondary">posts</div>
+                <div className="text-primary">posts</div>
               </div>
-              <div 
+              <div
                 className="text-center cursor-pointer hover:opacity-80 transition-opacity"
                 onClick={() => setShowFollowers(true)}
               >
                 <div className="font-semibold text-lg">
                   {userStats?.followerCount || 0}
                 </div>
-                <div className="text-text-secondary">followers</div>
+                <div className="text-primary">followers</div>
               </div>
-              <div 
+              <div
                 className="text-center cursor-pointer hover:opacity-80 transition-opacity"
                 onClick={() => setShowFollowing(true)}
               >
                 <div className="font-semibold text-lg">
                   {userStats?.followingCount || 0}
                 </div>
-                <div className="text-text-secondary">following</div>
+                <div className="text-primary">following</div>
               </div>
             </div>
           </div>
@@ -172,7 +172,7 @@ export default function ProfilePage({ username }) {
           </TabsList>
 
           <TabsContent value="posts" className="mt-8">
-            <ProfilePosts userId={user._id} />
+            <ProfilePosts userId={user._id} user={user} />
           </TabsContent>
 
           <TabsContent value="saved" className="mt-8">
