@@ -72,7 +72,6 @@ export default function Sidebar() {
       badge: unreadCount,
     },
     { href: "/messages", icon: MessageCircle, label: "Messages" },
-    { href: "/reels", icon: Play, label: "Reels" },
     {
       href: `/profile/${currentUser?.username}`,
       icon: User,
