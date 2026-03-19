@@ -164,7 +164,7 @@ export default function EditProfileModal({ isOpen, onClose, user }) {
               onChange={handleFileSelect}
               className="hidden"
             />
-            <p className="text-sm text-text-secondary mt-2">
+            <p className="text-sm text-primary mt-2">
               Click the camera icon to change your profile picture
             </p>
           </div>
@@ -197,7 +197,7 @@ export default function EditProfileModal({ isOpen, onClose, user }) {
                 maxLength={30}
                 disabled={isLoading}
               />
-              <p className="text-xs text-text-secondary">
+              <p className="text-xs text-primary">
                 Username can only contain letters, numbers, dots, and
                 underscores
               </p>
@@ -214,7 +214,7 @@ export default function EditProfileModal({ isOpen, onClose, user }) {
                 maxLength={150}
                 disabled={isLoading}
               />
-              <div className="text-xs text-text-secondary text-right">
+              <div className="text-xs text-primary text-right">
                 {bio.length}/150
               </div>
             </div>
