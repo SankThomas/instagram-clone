@@ -72,7 +72,7 @@ export default function Feed() {
             </div>
           </div>
           <h3 className="text-xl font-semibold mb-2">No posts yet</h3>
-          <p className="text-text-secondary mb-6">
+          <p className="text-primary mb-6">
             Start following people to see their posts in your feed.
           </p>
 
