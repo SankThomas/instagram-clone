@@ -1,5 +1,5 @@
 import { formatDistanceToNow } from "date-fns";
-import { Heart, Reply, Trash2, CreditCard as Edit } from "lucide-react";
+import { Heart, Reply, Trash2, Pencil } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
@@ -45,13 +45,17 @@ export default function CommentItem({
       </Link>
 
       <div className="flex-1 min-w-0">
-        <div className="bg-secondary rounded-2xl px-3 py-2">
+        <div className="bg-input/30 rounded-2xl px-3 py-2">
           <Link
             href={`/profile/${comment.user.username}`}
             className="font-semibold text-sm hover:opacity-80 transition-opacity"
           >
             {comment.user.displayName || comment.user.username}
+            <small className="block font-light text-xs text-primary">
+              {comment.user?.bio}
+            </small>
           </Link>
+
           {isEditing ? (
             <div className="mt-2 space-y-2">
               <Input
@@ -70,11 +74,13 @@ export default function CommentItem({
               </div>
             </div>
           ) : (
-            <div className="text-sm mt-1 wrap-break-word">{comment.content}</div>
+            <div className="text-sm mt-3 wrap-break-word">
+              {comment.content}
+            </div>
           )}
         </div>
 
-        <div className="flex items-center gap-4 mt-2 text-xs text-text-secondary">
+        <div className="flex items-center gap-4 mt-2 text-xs text-primary">
           <span>
             {formatDistanceToNow(new Date(comment.createdAt), {
               addSuffix: true,
@@ -85,7 +91,7 @@ export default function CommentItem({
             variant="ghost"
             size="sm"
             onClick={onLike}
-            className={`h-auto p-0 text-xs ${comment.isLiked ? "text-error" : "text-text-secondary"} hover:text-text`}
+            className={`h-auto p-0 text-xs ${comment.isLiked ? "text-error" : "text-primary"} hover:text-text`}
           >
             <Heart
               className={`size-3 mr-1 ${comment.isLiked ? "fill-current" : ""}`}
@@ -97,7 +103,7 @@ export default function CommentItem({
             variant="ghost"
             size="sm"
             onClick={onReply}
-            className={`h-auto p-0 text-xs text-text-secondary hover:text-text ${isReply ? "hidden" : ""}`}
+            className={`h-auto p-0 text-xs text-primary hover:text-text ${isReply ? "hidden" : ""}`}
           >
             <Reply className="size-3 mr-1" />
             Reply
@@ -109,9 +115,9 @@ export default function CommentItem({
                 variant="ghost"
                 size="sm"
                 onClick={() => setIsEditing(true)}
-                className="h-auto p-0 text-xs text-text-secondary hover:text-text opacity-0 group-hover:opacity-100 transition-opacity"
+                className="h-auto p-0 text-xs text-secondary hover:text-text opacity-0 group-hover:opacity-100 transition-opacity"
               >
-                <Edit className="size-3" />
+                <Pencil className="size-3" />
               </Button>
               <Button
                 variant="ghost"
@@ -130,7 +136,7 @@ export default function CommentItem({
             variant="ghost"
             size="sm"
             onClick={() => setShowReplies(!showReplies)}
-            className="h-auto p-0 text-xs text-text-secondary hover:text-text mt-2"
+            className="h-auto p-0 text-xs text-primary hover:text-text mt-2"
           >
             {showReplies ? "Hide" : "View"} {comment.repliesCount}{" "}
             {comment.repliesCount === 1 ? "reply" : "replies"}
