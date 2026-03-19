@@ -29,19 +29,14 @@ export const isFollowing = query({
 export const getFollowers = query({
   args: {
     userId: v.id("users"),
-    paginationOpts: v.optional(
-      v.object({
-        numItems: v.number(),
-        cursor: v.optional(v.string()),
-      }),
-    ),
+    paginationOpts: paginationOptsValidator,
   },
   handler: async (ctx, args) => {
     const follows = await ctx.db
       .query("follows")
       .withIndex("by_followingId", (q) => q.eq("followingId", args.userId))
       .order("desc")
-      .paginate(args.paginationOpts || { numItems: 20 });
+      .paginate(args.paginationOpts);
 
     const followersWithUserData = await Promise.all(
       follows.page.map(async (follow) => {
