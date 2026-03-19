@@ -257,11 +257,11 @@ export default function CreatePostModal({ isOpen, onClose }) {
               onClick={handleFileInputClick}
               className="border-2 border-dashed border-border rounded-lg p-12 text-center cursor-pointer hover:border-primary transition-colors"
             >
-              <ImageIcon className="size-16 mx-auto mb-4 text-text-secondary" />
+              <ImageIcon className="size-16 mx-auto mb-4 text-primary" />
               <h3 className="text-lg font-semibold mb-2">
                 Select photos or videos to share
               </h3>
-              <p className="text-text-secondary mb-4">
+              <p className="text-primary mb-4">
                 Choose photos or videos from your computer
               </p>
               <Button>
@@ -353,7 +353,7 @@ export default function CreatePostModal({ isOpen, onClose }) {
                     rows={4}
                     maxLength={500}
                   />
-                  <div className="text-xs text-text-secondary text-right">
+                  <div className="text-xs text-primary text-right">
                     {caption.length}/500
                   </div>
                 </div>
