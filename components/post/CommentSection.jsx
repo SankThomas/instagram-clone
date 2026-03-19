@@ -140,7 +140,7 @@ export default function CommentSection({
       {/* Reply Form */}
       {replyingTo && showAddComment && (
         <div className="border-t border-border p-4">
-          <div className="text-sm text-text-secondary mb-3">
+          <div className="text-sm text-primary mb-3">
             Replying to{" "}
             {comments?.find((c) => c._id === replyingTo)?.user.username}
           </div>
