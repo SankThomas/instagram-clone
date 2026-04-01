@@ -12,6 +12,7 @@ import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import { PostSkeleton } from "../ui/LoadingSkeleton";
 import SuggestedUsers from "./SuggestedUsers";
+import StoriesBar from "../stories/StoriesBar";
 
 export default function Feed() {
   const { user } = useUser();
@@ -88,6 +89,8 @@ export default function Feed() {
 
   return (
     <div className="space-y-8">
+      <StoriesBar />
+      
       <div className="flex gap-8">
         <div className="flex-1 space-y-8">
           {posts.map((post) => (

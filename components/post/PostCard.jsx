@@ -4,18 +4,7 @@ import { api } from "@/convex/_generated/api";
 import { useUser } from "@clerk/nextjs";
 import { useMutation, useQuery } from "convex/react";
 import { formatDistanceToNow } from "date-fns";
-import {
-  Bookmark,
-  ChevronLeft,
-  ChevronRight,
-  Copy,
-  Heart,
-  MessageCircle,
-  MoreHorizontal,
-  Share,
-  Share as ShareIcon,
-  Trash2,
-} from "lucide-react";
+import { Bookmark, ChevronLeft, ChevronRight, Copy, Heart, MessageCircle, MoveHorizontal as MoreHorizontal, Share, Share as ShareIcon, Trash2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
