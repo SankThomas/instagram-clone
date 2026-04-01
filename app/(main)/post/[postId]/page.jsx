@@ -1,11 +1,11 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useQuery } from "convex/react";
 import { useUser } from "@clerk/nextjs";
 import { api } from "@/convex/_generated/api";
-import PostModal from "@/components/profile/PostModal";
-import { useRouter } from "next/navigation";
+import PostCard from "@/components/post/PostCard";
+import { useEffect } from "react";
 
 export default function PostPage() {
   const { postId } = useParams();
@@ -16,6 +16,15 @@ export default function PostPage() {
     api.posts.getPostById,
     postId ? { postId, clerkId: user?.id } : "skip",
   );
+
+  // Update URL when post modal is opened
+  useEffect(() => {
+    if (post) {
+      // This ensures the URL reflects the current post
+      window.history.replaceState(null, "", `/post/${postId}`);
+      console.log(window.origin);
+    }
+  }, [post, postId]);
 
   if (!post) {
     return (
@@ -28,5 +37,9 @@ export default function PostPage() {
     );
   }
 
-  return <PostModal post={post} onClose={() => router.back()} />;
+  return (
+    <div className="max-w-2xl mx-auto">
+      <PostCard post={post} />
+    </div>
+  );
 }
