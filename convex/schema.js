@@ -148,4 +148,38 @@ export default defineSchema({
     .index("by_userId", ["userId"])
     .index("by_postId", ["postId"])
     .index("by_userId_postId", ["userId", "postId"]),
+
+  stories: defineTable({
+    userId: v.id("users"),
+    imageUrl: v.optional(v.string()),
+    imageId: v.optional(v.id("_storage")),
+    videoUrl: v.optional(v.string()),
+    videoId: v.optional(v.id("_storage")),
+    mediaType: v.union(v.literal("image"), v.literal("video")),
+    caption: v.optional(v.string()),
+    viewCount: v.optional(v.number()),
+    createdAt: v.number(),
+    expiresAt: v.number(),
+  })
+    .index("by_userId", ["userId"])
+    .index("by_createdAt", ["createdAt"])
+    .index("by_expiresAt", ["expiresAt"]),
+
+  storyViews: defineTable({
+    storyId: v.id("stories"),
+    userId: v.id("users"),
+    createdAt: v.number(),
+  })
+    .index("by_storyId", ["storyId"])
+    .index("by_userId", ["userId"])
+    .index("by_storyId_userId", ["storyId", "userId"]),
+
+  storyReactions: defineTable({
+    storyId: v.id("stories"),
+    userId: v.id("users"),
+    reaction: v.string(),
+    createdAt: v.number(),
+  })
+    .index("by_storyId", ["storyId"])
+    .index("by_userId", ["userId"]),
 });
