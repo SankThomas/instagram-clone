@@ -193,6 +193,12 @@ export default function MessagesPage() {
         ))}
       </div>
 
+      {filteredConversations.length === 0 && (
+        <p className="text-center mt-8 text-neutral-600">
+          No chats found. Try another search term.
+        </p>
+      )}
+
       {status === "CanLoadMore" && (
         <div className="text-center mt-8">
           <Button onClick={() => loadMore(20)} variant="outline">
