@@ -66,7 +66,10 @@ export default function SettingsPage() {
           {currentUser && (
             <div className="flex items-center gap-4">
               <Avatar className="size-16">
-                <AvatarImage src={currentUser.profilePictureUrl} />
+                <AvatarImage
+                  src={currentUser.profilePictureUrl}
+                  className="object-cover"
+                />
                 <AvatarFallback className="text-xl">
                   {currentUser.displayName?.[0]?.toUpperCase() ||
                     currentUser.username?.[0]?.toUpperCase()}
@@ -137,17 +140,16 @@ export default function SettingsPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Shield className="size-5" />
-              Privacy
+              Messages
             </CardTitle>
-            <CardDescription>Control who can see your content</CardDescription>
+            <CardDescription>Chat with mutual follows</CardDescription>
           </CardHeader>
           <CardContent>
-            <Button variant="outline" className="w-full" disabled>
-              Privacy Settings{" "}
-              <Badge variant="secondary" className="ml-2">
-                Coming Soon
-              </Badge>
-            </Button>
+            <Link href="/messages">
+              <Button variant="outline" className="w-full">
+                Go to Messages <ExternalLink className="size-4 ml-2" />
+              </Button>
+            </Link>
           </CardContent>
         </Card>
 
@@ -159,22 +161,25 @@ export default function SettingsPage() {
             </CardTitle>
             <CardDescription>Customize how Instagram looks</CardDescription>
           </CardHeader>
-          <CardContent className="flex items-center justify-between">
+          <CardContent className="flex items-center justify-between gap-2">
             <Button
               variant={theme === "light" ? "default" : "outline"}
               onClick={() => setTheme("light")}
+              className="flex-1"
             >
               <Sun className="size-4" /> Light
             </Button>
             <Button
               variant={theme === "dark" ? "default" : "outline"}
               onClick={() => setTheme("dark")}
+              className="flex-1"
             >
               <Moon className="size-4" /> Dark
             </Button>
             <Button
               variant={theme === "system" ? "default" : "outline"}
               onClick={() => setTheme("system")}
+              className="flex-1"
             >
               <Computer className="size-4" /> System
             </Button>
