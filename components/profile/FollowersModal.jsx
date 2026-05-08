@@ -28,7 +28,10 @@ export default function FollowersModal({ isOpen, onClose, userId, title }) {
                 onClick={onClose}
               >
                 <Avatar className="size-10">
-                  <AvatarImage src={follow.user.profilePictureUrl} />
+                  <AvatarImage
+                    src={follow.user.profilePictureUrl}
+                    className="object-cover"
+                  />
                   <AvatarFallback>
                     {follow.user.displayName?.[0]?.toUpperCase() ||
                       follow.user.username?.[0]?.toUpperCase()}

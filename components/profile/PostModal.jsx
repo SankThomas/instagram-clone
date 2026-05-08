@@ -117,6 +117,7 @@ export default function PostModal({ user: profileUser, post, onClose }) {
                       profileUser?.profilePictureUrl ||
                       post.user?.profilePictureUrl
                     }
+                    className="object-cover"
                   />
                   <AvatarFallback>
                     {profileUser?.displayName?.[0]?.toUpperCase() ||
@@ -154,6 +155,7 @@ export default function PostModal({ user: profileUser, post, onClose }) {
                         profileUser?.profilePictureUrl ||
                         post.user?.profilePictureUrl
                       }
+                      className="object-cover"
                     />
                     <AvatarFallback>
                       {profileUser?.displayName?.[0]?.toUpperCase() ||

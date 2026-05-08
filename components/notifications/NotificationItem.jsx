@@ -74,7 +74,10 @@ export default function NotificationItem({
           {notification.fromUser ? (
             <Link href={`/profile/${notification.fromUser.username}`}>
               <Avatar className="size-12">
-                <AvatarImage src={notification.fromUser.profilePictureUrl} />
+                <AvatarImage
+                  src={notification.fromUser.profilePictureUrl}
+                  className="object-cover"
+                />
                 <AvatarFallback>
                   {notification.fromUser.displayName?.[0]?.toUpperCase() ||
                     notification.fromUser.username?.[0]?.toUpperCase()}

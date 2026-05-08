@@ -32,7 +32,10 @@ export default function NewMessagePage() {
           className="flex items-center gap-3 p-3 hover:bg-secondary rounded-lg"
         >
           <Avatar>
-            <AvatarImage src={follow.user.profilePictureUrl} />
+            <AvatarImage
+              src={follow.user.profilePictureUrl}
+              className="object-cover"
+            />
             <AvatarFallback>
               {follow.user.username[0].toUpperCase()}
             </AvatarFallback>

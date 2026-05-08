@@ -159,7 +159,10 @@ export default function ChatPage() {
           className="flex items-center gap-2"
         >
           <Avatar className="size-10">
-            <AvatarImage src={otherUser.profilePictureUrl} />
+            <AvatarImage
+              src={otherUser.profilePictureUrl}
+              className="object-cover"
+            />
             <AvatarFallback>
               {otherUser.displayName?.[0]?.toUpperCase() ||
                 otherUser.username?.[0]?.toUpperCase()}
@@ -212,7 +215,10 @@ export default function ChatPage() {
                   className={`flex gap-3 ${isOwn ? "flex-row-reverse" : ""}`}
                 >
                   <Avatar className="size-8">
-                    <AvatarImage src={message.sender.profilePictureUrl} />
+                    <AvatarImage
+                      src={message.sender.profilePictureUrl}
+                      className="object-cover"
+                    />
                     <AvatarFallback>
                       {message.sender.displayName?.[0]?.toUpperCase() ||
                         message.sender.username?.[0]?.toUpperCase()}

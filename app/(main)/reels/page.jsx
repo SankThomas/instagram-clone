@@ -137,7 +137,10 @@ export default function ReelsPage() {
                   className="flex items-center gap-3 mb-3"
                 >
                   <Avatar className="size-10">
-                    <AvatarImage src={reel.user.profilePictureUrl} />
+                    <AvatarImage
+                      src={reel.user.profilePictureUrl}
+                      className="object-cover"
+                    />
                     <AvatarFallback>
                       {reel.user.displayName?.[0]?.toUpperCase() ||
                         reel.user.username?.[0]?.toUpperCase()}

@@ -36,7 +36,10 @@ export default function CommentItem({
     <div className="flex gap-3 group">
       <Link href={`/profile/${comment.user.username}`}>
         <Avatar className="size-8">
-          <AvatarImage src={comment.user.profilePictureUrl} />
+          <AvatarImage
+            src={comment.user.profilePictureUrl}
+            className="object-cover"
+          />
           <AvatarFallback className="text-xs">
             {comment.user.displayName?.[0]?.toUpperCase() ||
               comment.user.username?.[0]?.toUpperCase()}
