@@ -1,27 +1,16 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useMutation, useQuery } from "convex/react";
-import { useUser } from "@clerk/nextjs";
-import { api } from "@/convex/_generated/api";
-import Image from "next/image";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import {
-  Dialog,
-  DialogContent,
-} from "@/components/ui/dialog";
-import {
-  X,
-  ChevronLeft,
-  ChevronRight,
-  Heart,
-  Send,
-  Eye,
-  Smile,
-} from "lucide-react";
+import { api } from "@/convex/_generated/api";
+import { useUser } from "@clerk/nextjs";
+import { useMutation, useQuery } from "convex/react";
 import { formatDistanceToNow } from "date-fns";
+import { ChevronLeft, ChevronRight, Eye, Send, Smile, X } from "lucide-react";
+import Image from "next/image";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 export default function StoryViewer({ userStories, onClose }) {
@@ -84,7 +73,15 @@ export default function StoryViewer({ userStories, onClose }) {
     }, interval);
 
     return () => clearInterval(timer);
-  }, [currentStory, currentStoryIndex, userStories.stories.length, isPaused, user, viewStory, onClose]);
+  }, [
+    currentStory,
+    currentStoryIndex,
+    userStories.stories.length,
+    isPaused,
+    user,
+    viewStory,
+    onClose,
+  ]);
 
   const nextStory = () => {
     if (currentStoryIndex < userStories.stories.length - 1) {
@@ -139,6 +136,7 @@ export default function StoryViewer({ userStories, onClose }) {
 
   return (
     <Dialog open={true} onOpenChange={onClose}>
+      <DialogTitle></DialogTitle>
       <DialogContent className="max-w-md h-[90vh] p-0 bg-black">
         <div className="relative w-full h-full">
           {/* Progress bars */}
@@ -167,7 +165,10 @@ export default function StoryViewer({ userStories, onClose }) {
           <div className="absolute top-6 left-4 right-4 z-20 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Avatar className="size-8">
-                <AvatarImage src={userStories.user.profilePictureUrl} />
+                <AvatarImage
+                  src={userStories.user.profilePictureUrl}
+                  className="object-cover"
+                />
                 <AvatarFallback>
                   {userStories.user.displayName?.[0]?.toUpperCase() ||
                     userStories.user.username?.[0]?.toUpperCase()}
@@ -291,9 +292,15 @@ export default function StoryViewer({ userStories, onClose }) {
                     Views ({storyViewers?.length || 0})
                   </h3>
                   {storyViewers?.map((view) => (
-                    <div key={view._id} className="flex items-center gap-3 mb-2">
+                    <div
+                      key={view._id}
+                      className="flex items-center gap-3 mb-2"
+                    >
                       <Avatar className="size-6">
-                        <AvatarImage src={view.user.profilePictureUrl} />
+                        <AvatarImage
+                          src={view.user.profilePictureUrl}
+                          className="object-cover"
+                        />
                         <AvatarFallback className="text-xs">
                           {view.user.username?.[0]?.toUpperCase()}
                         </AvatarFallback>
@@ -309,9 +316,15 @@ export default function StoryViewer({ userStories, onClose }) {
                         Reactions
                       </h3>
                       {storyReactions.map((reaction) => (
-                        <div key={reaction._id} className="flex items-center gap-3 mb-2">
+                        <div
+                          key={reaction._id}
+                          className="flex items-center gap-3 mb-2"
+                        >
                           <Avatar className="size-6">
-                            <AvatarImage src={reaction.user.profilePictureUrl} />
+                            <AvatarImage
+                              src={reaction.user.profilePictureUrl}
+                              className="object-cover"
+                            />
                             <AvatarFallback className="text-xs">
                               {reaction.user.username?.[0]?.toUpperCase()}
                             </AvatarFallback>
