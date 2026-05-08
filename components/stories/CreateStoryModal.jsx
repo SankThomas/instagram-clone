@@ -53,7 +53,9 @@ export default function CreateStoryModal({ isOpen, onClose }) {
       return;
     }
 
-    const detectedMediaType = file.type.startsWith("video/") ? "video" : "image";
+    const detectedMediaType = file.type.startsWith("video/")
+      ? "video"
+      : "image";
     setMediaType(detectedMediaType);
     setSelectedFile(file);
 
@@ -122,7 +124,7 @@ export default function CreateStoryModal({ isOpen, onClose }) {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="max-w-md">
+      <DialogContent className="max-w-md! max-h-[70vh]! h-full overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Create Story</DialogTitle>
         </DialogHeader>
@@ -137,9 +139,7 @@ export default function CreateStoryModal({ isOpen, onClose }) {
                 <ImageIcon className="size-8 text-primary" />
                 <Video className="size-8 text-primary" />
               </div>
-              <h3 className="text-lg font-semibold mb-2">
-                Share a moment
-              </h3>
+              <h3 className="text-lg font-semibold mb-2">Share a moment</h3>
               <p className="text-primary mb-4">
                 Choose a photo or video for your story
               </p>
@@ -204,10 +204,13 @@ export default function CreateStoryModal({ isOpen, onClose }) {
             </div>
 
             <div className="flex justify-between">
-              <Button variant="outline" onClick={() => {
-                setSelectedFile(null);
-                setPreview("");
-              }}>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setSelectedFile(null);
+                  setPreview("");
+                }}
+              >
                 Back
               </Button>
               <Button
