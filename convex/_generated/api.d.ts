@@ -16,6 +16,7 @@ import type * as notifications from "../notifications.js";
 import type * as posts from "../posts.js";
 import type * as reels from "../reels.js";
 import type * as storage from "../storage.js";
+import type * as stories from "../stories.js";
 import type * as users from "../users.js";
 
 import type {
@@ -33,6 +34,7 @@ declare const fullApi: ApiFromModules<{
   posts: typeof posts;
   reels: typeof reels;
   storage: typeof storage;
+  stories: typeof stories;
   users: typeof users;
 }>;
 
